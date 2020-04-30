@@ -1,0 +1,27 @@
+<ion-content [fullscreen]="true">
+
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/events"></ion-back-button>
+      </ion-buttons>
+      <ion-buttons slot="end" class="ion-padding-end" (click)="countMeIn()">
+        <ion-icon slot="icon-only" name="{{countMeInIconName}}"></ion-icon>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-segment (ionChange)="segmentChanged($event)" value="info">
+    <ion-segment-button value="info">
+      <ion-icon name="information-circle-outline"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="people">
+      <ion-icon name="people-outline"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="shop">
+      <ion-icon name="pricetags-outline"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ng-template #container></ng-template>
+</ion-content>

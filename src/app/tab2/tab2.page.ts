@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { EventsService } from './services/events.service';
+import { EventInfo } from './models/event-info';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tab2',
@@ -6,7 +9,12 @@ import { Component } from '@angular/core';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page {
+  public events$: Observable<EventInfo[]> = null;
 
-  constructor() {}
+  constructor(private _eventsService: EventsService) {}
+
+  ngOnInit() {
+    this.events$ = this._eventsService.getEvents();
+  }
 
 }

@@ -1,0 +1,11 @@
+<ion-content class="ion-padding">
+  <div *ngIf="hasLoaded">
+    <p>What: {{ eventInfo.description }}</p>
+    <p>Where: {{ eventInfo.place }}</p>
+    <p>When: {{ eventInfo.date | date:'longDate' }}</p>
+    <p>Going: {{ eventInfo.numOfParticipants }}</p>
+  </div>
+
+  <ion-progress-bar class="progress-bar" [hidden]="hasLoaded" type="indeterminate"></ion-progress-bar>
+  
+</ion-content>
