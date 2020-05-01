@@ -1,0 +1,30 @@
+<div class="post">
+
+  <ion-item class="header">
+    <ion-avatar slot="start">
+      <img class="feed-user-img" src={{userPhoto}} />
+    </ion-avatar>
+    <ion-label>
+      <b>{{fname}}</b> to <b>{{eventName}}</b>
+      <p>{{calculateDate(post.date)}} from Madison, WI</p>
+    </ion-label>
+  </ion-item>
+
+  <div class="post-body">
+    <div class="description">
+      {{post.description}}
+    </div>
+    <ion-img src="{{post.pic}}"></ion-img>
+    <div class="actions">
+      <div>
+        <ion-button expand="full" size="small" color="dark" fill="clear">{{post.numOfFlexes}} 💪</ion-button>
+      </div>
+      <div>
+        <ion-button expand="full" size="small" color="dark" fill="clear">{{post.numOfComments}} 👏</ion-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+</div>

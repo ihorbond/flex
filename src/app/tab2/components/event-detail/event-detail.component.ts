@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewContainerRef, ViewChild, ComponentFactoryResolver, ComponentRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild, ComponentFactoryResolver, ComponentRef, AfterViewInit } from '@angular/core';
 import { EventInfoComponent } from '../event-info/event-info.component';
 import { EventPeopleComponent } from '../event-people/event-people.component';
+import { AlertController } from '@ionic/angular';
+
 
 const defaultComponentType: string = "info";
 
@@ -9,25 +11,33 @@ const defaultComponentType: string = "info";
   templateUrl: './event-detail.component.html',
   styleUrls: ['./event-detail.component.scss'],
 })
-export class EventDetailComponent implements OnInit {
+export class EventDetailComponent implements AfterViewInit {
   @ViewChild('container', { static: true, read: ViewContainerRef }) container: ViewContainerRef;
 
   public countMeInIconName: string = "flash-outline";
 
   constructor(
+    public alertController: AlertController,
     private _resolver: ComponentFactoryResolver
   ) { }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.createComponent(defaultComponentType);
   }
 
-  public countMeIn(): void {
+  public async countMeIn(): Promise<void> {
     this.countMeInIconName = "flash";
+    const alert = await this.alertController.create({
+      header: 'Fuck yeah dude 🤙',
+      message: 'You are going to this event ',
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 
   public segmentChanged(e: any): void {
-    console.log('Segment changed', e.detail);
+    //console.log('Segment changed', e.detail);
     this.createComponent(e.detail.value);
   }
 

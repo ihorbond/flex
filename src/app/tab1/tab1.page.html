@@ -1,17 +1,44 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+    <ion-searchbar animated (ionBlur)="searchFeed($event)"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-icon slot="icon-only" name="add-circle-outline" (click)="addPost()"></ion-icon>
+    </ion-buttons>
   </ion-toolbar>
+  <!-- <ion-toolbar>
+    <ion-segment class="feed-segment" value="all" (ionChange)="feedSegmentChanged($event)">
+      <ion-segment-button class="segment-btn" value="all">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button class="segment-btn" value="local">
+        <ion-label>Local</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar> -->
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <!-- <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title>Feed</ion-title>
     </ion-toolbar>
-  </ion-header>
+  </ion-header> -->
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <!-- <ion-list>
+    <app-feed-post *ngFor="let p of posts$ | async" [post]="p"></app-feed-post>
+  </ion-list> -->
+
+  <ion-list #feed></ion-list>
+
+  <ion-infinite-scroll threshold="100px" id="infinite-scroll" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loading-spinner="bubbles" loading-text="Loading...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
 </ion-content>
+
+<!-- <ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Footer - No Border</ion-title>
+  </ion-toolbar>
+</ion-footer> -->
