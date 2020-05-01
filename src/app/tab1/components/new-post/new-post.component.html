@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="post()">Post</ion-button>
+    </ion-buttons>
+    <ion-title>New Post</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<form [formGroup]="newPostForm" (ngSubmit)="post()">
+  <ion-item>
+    <ion-label>Event</ion-label>
+    <ion-select formControlName="eventId" placeholder="Select event">
+      <ion-select-option value="1">Spartan Race</ion-select-option>
+      <ion-select-option value="2">Tough Mudder</ion-select-option>
+      <ion-select-option value="3">Local</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-textarea 
+      formControlName="description" 
+      autoGrow="true" 
+      autofocus="true" 
+      maxlength="200"
+      placeholder="Say something">
+    </ion-textarea>
+  </ion-item>
+  <ion-item>
+    <ion-input formControlName="pic" placeholder="Photo url"></ion-input>
+  </ion-item>
+</form>
+ 
+
+</ion-content>

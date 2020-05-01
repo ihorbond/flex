@@ -1,10 +1,9 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-searchbar animated (ionBlur)="searchFeed($event)"></ion-searchbar>
-    <ion-buttons slot="end">
-      <ion-icon slot="icon-only" name="add-circle-outline" (click)="addPost()"></ion-icon>
-    </ion-buttons>
-  </ion-toolbar>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Feed</ion-title>
+    </ion-toolbar>
+  </ion-header>
   <!-- <ion-toolbar>
     <ion-segment class="feed-segment" value="all" (ionChange)="feedSegmentChanged($event)">
       <ion-segment-button class="segment-btn" value="all">
@@ -18,16 +17,14 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title>Feed</ion-title>
-    </ion-toolbar>
-  </ion-header> -->
+  <ion-toolbar collapse="condense">
+    <ion-searchbar animated (ionBlur)="searchFeed($event)"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-icon slot="icon-only" name="add-circle-outline" (click)="addPost()"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
 
-  <!-- <ion-list>
-    <app-feed-post *ngFor="let p of posts$ | async" [post]="p"></app-feed-post>
-  </ion-list> -->
-
+  <ion-progress-bar *ngIf="isPosting" type="indeterminate"></ion-progress-bar>
   <ion-list #feed></ion-list>
 
   <ion-infinite-scroll threshold="100px" id="infinite-scroll" (ionInfinite)="loadData($event)">

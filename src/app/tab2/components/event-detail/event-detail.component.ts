@@ -3,7 +3,6 @@ import { EventInfoComponent } from '../event-info/event-info.component';
 import { EventPeopleComponent } from '../event-people/event-people.component';
 import { AlertController } from '@ionic/angular';
 
-
 const defaultComponentType: string = "info";
 
 @Component({
@@ -15,6 +14,7 @@ export class EventDetailComponent implements AfterViewInit {
   @ViewChild('container', { static: true, read: ViewContainerRef }) container: ViewContainerRef;
 
   public countMeInIconName: string = "flash-outline";
+  public title: string = "Event Info";
 
   constructor(
     public alertController: AlertController,
@@ -45,16 +45,19 @@ export class EventDetailComponent implements AfterViewInit {
     this.container.clear();
     switch(type) {
       case 'people': {
+        this.title = "Match";
         const factory = this._resolver.resolveComponentFactory(EventPeopleComponent);
         const componentRef: ComponentRef<EventPeopleComponent> = this.container.createComponent(factory);
         break; 
       }
-      // case 'shop': {
-      //   const factory = this._resolver.resolveComponentFactory(ShopComponent);
-      //   const componentRef: ComponentRef<ShopComponent> = this.container.createComponent(factory);
-      //   break;
-      // } 
+      case 'shop': {
+        this.title = "Shop"
+        // const factory = this._resolver.resolveComponentFactory(ShopComponent);
+        // const componentRef: ComponentRef<ShopComponent> = this.container.createComponent(factory);
+        break;
+      } 
       default: {
+        this.title = "Event Info"
         const factory = this._resolver.resolveComponentFactory(EventInfoComponent);
         const componentRef: ComponentRef<EventInfoComponent> = this.container.createComponent(factory);
         break;

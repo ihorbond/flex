@@ -64,12 +64,14 @@ export class FeedService {
   constructor() { }
 
   public getFeedPosts(startFrom: number): Promise<FeedPost[]> {
-    return (of(this.feedPosts.slice(startFrom, startFrom + this.step)).pipe(delay(2000)) as Observable<FeedPost[]>).toPromise();
+    const res = this.feedPosts.slice(startFrom, startFrom + this.step);                    
+    return of(res).pipe(delay(2000)).toPromise();
   }
 
   public addPost(post: FeedPost): Observable<any> {
     post.id = this.feedPosts.pop().id + 1;
-    this.feedPosts.push(post);
-    return of(null);
+    this.feedPosts.unshift(post);
+    // this.feedPosts = this.feedPosts.sort((a, b) => b.date.getTime() - a.date.getTime());
+    return of(null).pipe(delay(3000));
   }
 }

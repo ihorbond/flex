@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  login(e: MouseEvent): void {
+  public login(e: MouseEvent): void {
     //console.log(e);
     //console.log("login", this.loginForm);
     if(this.loginForm.valid) {
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  async presentToast(): Promise<void> {
+  private async presentToast(): Promise<void> {
     const toast = await this.toastController.create({
       position: 'top',
       message: 'Invalid username or password',
