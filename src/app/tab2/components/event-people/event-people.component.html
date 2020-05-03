@@ -1,3 +1,33 @@
-<p>
-  event-people works!
-</p>
+<!-- <ion-slides #slider pager="false" [options]="slideOpts" (ionSlideDidChange)="ionSlideDidChange($event)">
+
+  <ion-slide *ngFor="let oneCard of cards;trackBy: trackByMethod">
+    <ion-card>
+      <img src={{oneCard.pic}}>
+      <ion-card-header>
+        <ion-card-title>{{oneCard.name}}</ion-card-title>
+        <!-- <ion-card-subtitle></ion-card-subtitle> -->
+<!-- </ion-card-header>
+      <ion-card-content>
+        {{oneCard.description}}
+      </ion-card-content>
+    </ion-card>
+</ion-slide>
+
+
+</ion-slides> -->
+
+<div *ngIf="!isLoading">
+  <app-swipe-card [currentCard]="currentCard" (getNextCard)="getNextCard()" [parentSubject]="parentSubject"></app-swipe-card>
+  <div class="controls">
+    <ion-button (click)='cardAnimation("swipeleft")'>
+      <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+    </ion-button>
+    <ion-button (click)='cardAnimation("swiperight")'>
+      <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+</div>
+
+<div *ngIf="isLoading">
+  <ion-progress-bar class="progress-bar" type="indeterminate"></ion-progress-bar>
+</div>
