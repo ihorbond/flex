@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="done()">Done</ion-button>
+    </ion-buttons>
+    <ion-title>Filters</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item>
+    <ion-range dualKnobs pin value="65" min="18" max="65" color="secondary">
+      <ion-label slot="start"><b>Age</b>&nbsp;&nbsp;&nbsp;18</ion-label>
+      <ion-label slot="end">65</ion-label>
+    </ion-range>
+  </ion-item>
+
+</ion-content>

@@ -10,7 +10,7 @@ import { EventCardComponent } from './components/event-card/event-card.component
 import { EventPeopleComponent } from './components/event-people/event-people.component';
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
 import { EventInfoComponent } from './components/event-info/event-info.component';
-import { SwipeCardComponent } from './components/swipe-card/swipe-card.component';
+import { EventPeopleFilterComponent } from './components/event-people-filter/event-people-filter.component';
 
 @NgModule({
   imports: [
@@ -26,7 +26,10 @@ import { SwipeCardComponent } from './components/swipe-card/swipe-card.component
     EventDetailComponent,
     EventPeopleComponent,
     EventInfoComponent,
-    SwipeCardComponent
+    EventPeopleFilterComponent
+  ],
+  entryComponents: [
+    EventPeopleFilterComponent
   ]
 })
 export class Tab2PageModule {}
