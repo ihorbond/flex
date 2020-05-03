@@ -21,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/events/1',
+        redirectTo: 'tabs/feed',
         pathMatch: 'full'
       }
     ]
