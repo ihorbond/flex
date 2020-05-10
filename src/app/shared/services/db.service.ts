@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Timestamp } from '@firebase/firestore-types';
+import { mapValues } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,15 @@ export class DbService {
 
   constructor(private fireStore: AngularFirestore) { }
 
-
+  convertToJS(data: Object): Object {
+    return mapValues(data, ((field: any) => {
+      // Timestamp -> Date
+      if (field.toDate) {
+        return field.toDate();
+      }
+      return field;
+    }));
+  }
 
   // get collection
   collection$(path: string, query?: QueryFn): Observable<any> {
@@ -21,7 +29,10 @@ export class DbService {
       .pipe(
         map(actions => {
           return actions.map(a => {
-            const data: Object = a.payload.doc.data();
+            let data: Object = a.payload.doc.data();
+
+            data = this.convertToJS(data);
+
             const id = a.payload.doc.id;
             return { id, ...data }
           })
@@ -36,7 +47,10 @@ export class DbService {
       .snapshotChanges()
       .pipe(
         map(doc => {
-          const data: Object = doc.payload.data();
+          let data: Object = doc.payload.data();
+
+          data = this.convertToJS(data);
+
           return { id: doc.payload.id, ...data }
         })
       );
@@ -44,14 +58,14 @@ export class DbService {
 
   // update or create document
   updateAt(path: string, data: Object): Promise<any> {
-     const segments = path.split('/').filter(v => v);
-     if (segments.length % 2){
+    const segments = path.split('/').filter(v => v);
+    if (segments.length % 2) {
       // odd -> collection
       return this.fireStore.collection(path).add(data);
-     } else {
+    } else {
       //  even -> doc
       return this.fireStore.doc(path).set(data, { merge: true });
-     }
+    }
   }
 
   delete(path: string) {
