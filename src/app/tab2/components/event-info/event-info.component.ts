@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EventInfo } from '../../models/event-info';
 import { EventsService } from '../../services/events.service';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-event-info',
@@ -9,8 +10,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./event-info.component.scss'],
 })
 export class EventInfoComponent implements OnInit {
-  public eventInfo: EventInfo;
-  public hasLoaded: boolean;
+  public eventInfo$: Observable<EventInfo>;
 
   constructor(
     private _eventsService: EventsService,
@@ -18,11 +18,7 @@ export class EventInfoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const id = +this._route.snapshot.paramMap.get('eventId');
-    this._eventsService.getEventById(id).subscribe((eventInfo: EventInfo) => {
-      this.eventInfo = eventInfo;
-      this.hasLoaded = true;
-    });
+    const id = this._route.snapshot.paramMap.get('eventId');
+    this.eventInfo$ = this._eventsService.getEventById(id);
   }
-
 }

@@ -14,6 +14,6 @@
   </ion-header>
 
   <ion-list>
-    <app-event-card *ngFor="let e of events$ | async" [event]="e"></app-event-card>
+    <app-event-card *ngFor="let event of events$ | async" [event]="event"></app-event-card>
   </ion-list>
 </ion-content>

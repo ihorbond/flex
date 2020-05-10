@@ -1,9 +1,9 @@
 <ion-card routerLink="detail/{{event.id}}" routerDirection="forward">
   <div class="card-overlay"></div>
-  <img src="{{event.pic}}" />
+  <img src="{{event.imageURL}}" />
   <div class="card-info">
-    <span class="card-title">{{event.place | uppercase}}</span>
-    <span class="card-subtitle">{{event.date | date:'longDate' | uppercase }}</span>
+    <span class="card-title">{{event.title | uppercase}}</span>
+    <span class="card-subtitle">{{event.date.toDate() | date:'longDate' | uppercase }}</span>
     <span class="event-organizer">{{event.organizer.name | uppercase}}</span>
   </div>
 </ion-card>
