@@ -14,6 +14,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { DbService } from './shared/services/db.service'; 
 
 @NgModule({
   declarations: [AppComponent],

@@ -1,11 +1,15 @@
 <ion-content class="ion-padding">
-  <div *ngIf="hasLoaded">
-    <p>What: {{ eventInfo.description }}</p>
-    <p>Where: {{ eventInfo.place }}</p>
-    <p>When: {{ eventInfo.date | date:'longDate' }}</p>
-    <p>Going: {{ eventInfo.numOfParticipants }}</p>
-  </div>
+  <ng-container *ngIf="(eventInfo$ | async) as eventInfo; else loading">
+    <div>
+      <p>What: {{ eventInfo.description }}</p>
+      <p>Where: {{ eventInfo.place }}</p>
+      <p>When: {{ eventInfo?.date?.toDate() | date:'longDate' }}</p>
+      <p>Going: {{ eventInfo.participants }}</p>
+    </div>
+  </ng-container>
 
-  <ion-progress-bar class="progress-bar" [hidden]="hasLoaded" type="indeterminate"></ion-progress-bar>
-  
+  <ng-template #loading>  
+    <ion-progress-bar class="progress-bar" type="indeterminate"></ion-progress-bar>
+  </ng-template>
+
 </ion-content>
