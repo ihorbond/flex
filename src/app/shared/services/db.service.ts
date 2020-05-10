@@ -14,7 +14,7 @@ export class DbService {
   convertToJS(data: Object): Object {
     return _.mapValues(data, ((field: any) => {
       // Timestamp -> Date
-      if(field.toDate){
+      if (field.toDate) {
         return field.toDate();
       }
       return field;
@@ -58,14 +58,14 @@ export class DbService {
 
   // update or create document
   updateAt(path: string, data: Object): Promise<any> {
-     const segments = path.split('/').filter(v => v);
-     if (segments.length % 2){
+    const segments = path.split('/').filter(v => v);
+    if (segments.length % 2) {
       // odd -> collection
       return this.fireStore.collection(path).add(data);
-     } else {
+    } else {
       //  even -> doc
       return this.fireStore.doc(path).set(data, { merge: true });
-     }
+    }
   }
 
   delete(path: string) {
