@@ -193,6 +193,9 @@
     },
     "@ionic/angular-toolkit:service": {
       "spec":false
+    },
+    "@ionic/angular-toolkit:pipe": {
+      "spec":false
     }
   }
 }

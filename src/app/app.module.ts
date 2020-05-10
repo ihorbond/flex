@@ -13,8 +13,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DbService } from './shared/services/db.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { DbService } from './shared/services/db.service'; 
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,7 +30,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
   providers: [
     StatusBar,
     SplashScreen,
-    // DbService,
     AngularFirestore,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
