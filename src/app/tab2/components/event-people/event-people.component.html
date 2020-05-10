@@ -1,7 +1,7 @@
 <div *ngIf="!isLoading">
 
   <ion-card class="card" [@cardAnimator]="animationState" (@cardAnimator.done)="resetAnimationState($event)"
-  (swipeleft)='startAnimation("swipeleft")' (swiperight)='startAnimation("swiperight")'>
+  (swipeleft)='animate("swipeleft")' (swiperight)='animate("swiperight")'>
   <img src={{cards[index].pic}}>
   <ion-card-header>
     <ion-card-title>{{cards[index].name}}</ion-card-title>

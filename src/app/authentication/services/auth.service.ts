@@ -22,11 +22,11 @@ export class AuthService {
   }
 
   public login(authInfo: UserAuthInfo): Promise<firebase.auth.UserCredential> {
-    return this.fAuth.auth.signInWithEmailAndPassword(authInfo.username, authInfo.pass);
+    return this.fAuth.signInWithEmailAndPassword(authInfo.username, authInfo.pass);
   }
 
   public logout(): void {
-    this.fAuth.auth.signOut().then(_ => this._router.navigate(['/auth/login']));
+    this.fAuth.signOut().then(_ => this._router.navigate(['/auth/login']));
   }
   
 }

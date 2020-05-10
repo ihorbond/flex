@@ -8,7 +8,7 @@
 
 <ion-content padding>
   
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
+  <form [formGroup]="loginForm" (ngSubmit)="login($event)">
     <ion-item>
       <ion-input formControlName="username" placeholder="Email"></ion-input>
       <ion-label color="danger" *ngIf="loginForm.get('username').dirty && loginForm.get('username').hasError('email')">Email is not valid</ion-label>

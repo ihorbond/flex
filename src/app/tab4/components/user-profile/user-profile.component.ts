@@ -5,10 +5,7 @@ import { EventsService } from 'src/app/tab2/services/events.service';
 import { ModalController } from '@ionic/angular';
 import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit.component';
 
-const slideOpts = {
-  initialSlide: 1,
-  speed: 400
-};
+
 
 const testUserId = "ynlfVJk02V8HnhB82ZH4";
 
@@ -18,6 +15,11 @@ const testUserId = "ynlfVJk02V8HnhB82ZH4";
   styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent implements OnInit {
+
+  slideOpts = {
+    initialSlide: 1,
+    speed: 400
+  };
 
   public user: Partial<User> = null;
   public events = null;
