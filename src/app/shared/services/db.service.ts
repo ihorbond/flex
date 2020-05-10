@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import * as _ from 'lodash';
+import { mapValues } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class DbService {
   constructor(private fireStore: AngularFirestore) { }
 
   convertToJS(data: Object): Object {
-    return _.mapValues(data, ((field: any) => {
+    return mapValues(data, ((field: any) => {
       // Timestamp -> Date
       if (field.toDate) {
         return field.toDate();
