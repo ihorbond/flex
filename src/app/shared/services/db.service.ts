@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -10,17 +11,14 @@ export class DbService {
 
   constructor(private fireStore: AngularFirestore) { }
 
-  convertToJS(data) {
-    const updatedData = Object.assign({}, data);
-    Object.keys(updatedData).forEach(key => {
-
+  convertToJS(data: Object): Object {
+    return _.mapValues(data, ((field: any) => {
       // Timestamp -> Date
-      if(updatedData[key].toDate){
-        updatedData[key] = updatedData[key].toDate()
+      if(field.toDate){
+        return field.toDate();
       }
-
-    });
-    return updatedData;
+      return field;
+    }));
   }
 
   // get collection
