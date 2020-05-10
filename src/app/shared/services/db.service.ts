@@ -10,6 +10,19 @@ export class DbService {
 
   constructor(private fireStore: AngularFirestore) { }
 
+  convertToJS(data) {
+    const updatedData = Object.assign({}, data);
+    Object.keys(updatedData).forEach(key => {
+
+      // Timestamp -> Date
+      if(updatedData[key].toDate){
+        updatedData[key] = updatedData[key].toDate()
+      }
+
+    });
+    return updatedData;
+  }
+
   // get collection
   collection$(path: string, query?: QueryFn): Observable<any> {
     return this.fireStore
@@ -18,7 +31,10 @@ export class DbService {
       .pipe(
         map(actions => {
           return actions.map(a => {
-            const data: Object = a.payload.doc.data();
+            let data: Object = a.payload.doc.data();
+
+            data = this.convertToJS(data);
+
             const id = a.payload.doc.id;
             return { id, ...data }
           })
@@ -33,7 +49,10 @@ export class DbService {
       .snapshotChanges()
       .pipe(
         map(doc => {
-          const data: Object = doc.payload.data();
+          let data: Object = doc.payload.data();
+
+          data = this.convertToJS(data);
+
           return { id: doc.payload.id, ...data }
         })
       );
