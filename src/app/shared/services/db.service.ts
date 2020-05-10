@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Timestamp } from '@firebase/firestore-types';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,8 @@ import { Observable } from 'rxjs';
 export class DbService {
 
   constructor(private fireStore: AngularFirestore) { }
+
+
 
   // get collection
   collection$(path: string, query?: QueryFn): Observable<any> {
@@ -54,4 +57,6 @@ export class DbService {
   delete(path: string) {
     return this.fireStore.doc(path).delete();
   }
+
+
 }
