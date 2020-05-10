@@ -17,6 +17,12 @@ export class DbService {
       if (field.toDate) {
         return field.toDate();
       }
+
+      // nested object -> recursively convert nested object
+      if (typeof field === 'object'){
+        field = this.convertToJS(field)
+      }
+
       return field;
     }));
   }
