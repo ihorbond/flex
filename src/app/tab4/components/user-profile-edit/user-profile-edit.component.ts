@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { User, UserPhoto } from 'src/app/shared/models/user';
 import { ModalController } from '@ionic/angular';
 import { DbService } from 'src/app/shared/services/db.service';
-//import { PhotoLibrary } from '@ionic-native/photo-library/ngx';
 import { finalize, tap } from 'rxjs/operators';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { Observable } from 'rxjs';
@@ -25,15 +24,14 @@ export class UserProfileEditComponent implements OnInit {
     private _modalController: ModalController,
     private _dbService: DbService,
     private _storageService: StorageService,
-    //private _photoLibrary: PhotoLibrary
   ) { }
 
 
   ngOnInit() {}
 
   public cancel(): void {
-    console.log("new photos");
-    console.log(this.addedPhotos)
+    // console.log("new photos");
+    // console.log(this.addedPhotos)
     this.addedPhotos.forEach(async x => await this.deleteFromServer(x));
     this._modalController.dismiss();
   }
@@ -43,20 +41,18 @@ export class UserProfileEditComponent implements OnInit {
       this._modalController.dismiss();
     }).catch(console.error);
 
-    console.log("delete photos");
-    console.log(this.deletedPhotos);
+    // console.log("delete photos");
+    // console.log(this.deletedPhotos);
     this.deletedPhotos.forEach(async x => await this.deleteFromServer(x));
   }
 
   public fileChange(files: FileList): void {
-    console.log(files);
-    let file: File = files.item(0);
+    const file: File = files.item(0);
     const name = `${Date.now()}_${file.name}`;
     const path = `images/users/${this.user.id}/${name}`;
     const task = this._storageService.fsRef.upload(path, file);
     this.percentage$ = task.percentageChanges();
     task.snapshotChanges().pipe(
-      //tap(console.log),
       finalize(async() => {
         const url = await this._storageService.getDownloadUrl(path);
         const photo = {

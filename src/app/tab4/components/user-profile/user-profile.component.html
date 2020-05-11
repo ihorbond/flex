@@ -1,5 +1,5 @@
-<div *ngIf="user">
-  <ion-slides pager="true" [options]="slideOpts">
+<div *ngIf="user" class="ion-padding">
+  <ion-slides [pager]="user.photos?.length > 1" [options]="slideOpts">
     <ion-slide *ngFor="let p of user.photos">
       <img src="{{p.url}}">
     </ion-slide>
@@ -9,11 +9,4 @@
   <span>{{user.description}}</span>
   <br/>
   <ion-button (click)="edit()">Edit Profile</ion-button>
-  <!-- <ion-card *ngFor="let e of user.events">
-    <img src="e.avatar">
-    <ion-card-header>
-      <ion-card-title>{{e.name}}</ion-card-title>
-      <ion-card-subtitle>{{e.date}}</ion-card-subtitle>
-    </ion-card-header>
-  </ion-card> -->
 </div>

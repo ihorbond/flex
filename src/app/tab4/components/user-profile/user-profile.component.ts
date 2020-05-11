@@ -14,10 +14,8 @@ const testUserId = "ynlfVJk02V8HnhB82ZH4";
   styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
-
   public slideOpts = {
-    initialSlide: 1,
-    speed: 400
+    speed: 400,
   };
 
   public user: User = null;
@@ -52,7 +50,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   private loadData(userId: string): Subscription {
     return this._dbService.doc$(`Users/${userId}`).subscribe(doc => {
       console.log(doc);
-      this.user = doc;      
+      this.user = doc; 
     });
    
   }
