@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { UserProfileService } from '../../services/user-profile.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from 'src/app/shared/models/user';
-import { EventsService } from 'src/app/tab2/services/events.service';
 import { ModalController } from '@ionic/angular';
 import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit.component';
-
-
+import { DbService } from 'src/app/shared/services/db.service';
+import { cloneDeep } from 'lodash';
+import { Subscription } from 'rxjs';
 
 const testUserId = "ynlfVJk02V8HnhB82ZH4";
 
@@ -14,24 +13,25 @@ const testUserId = "ynlfVJk02V8HnhB82ZH4";
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
 })
-export class UserProfileComponent implements OnInit {
-
-  slideOpts = {
-    initialSlide: 1,
-    speed: 400
+export class UserProfileComponent implements OnInit, OnDestroy {
+  public slideOpts = {
+    speed: 400,
   };
 
-  public user: Partial<User> = null;
-  public events = null;
+  public user: User = null;
+  private subs: Subscription[] = [];
 
   constructor(
-    private _userProfileService: UserProfileService,
-    private _eventsService: EventsService,
-    private _modalController: ModalController
+    private _modalController: ModalController,
+    private _dbService: DbService
   ) { }
 
   ngOnInit() {
-    this.loadData(testUserId);
+    this.subs.push(this.loadData(testUserId));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(x => x.unsubscribe());
   }
 
   public async edit(): Promise<void> {
@@ -39,33 +39,20 @@ export class UserProfileComponent implements OnInit {
       component: UserProfileEditComponent,
       swipeToClose: false,
       componentProps: {
-        user: this.user
+        user: cloneDeep(this.user)
       }
     });
 
     await modal.present();
-    const { data } = await modal.onWillDismiss();
     
   }
 
-  private loadData(userId: string): void {
-    this._userProfileService.getProfileById(userId).subscribe(doc => {
-      if(doc.exists) {
-        this.user = doc.data() as Partial<User>;
-        
-        console.log(this.user);
-      }
-      else{
-        console.error("No doc");
-      }
+  private loadData(userId: string): Subscription {
+    return this._dbService.doc$(`Users/${userId}`).subscribe(doc => {
+      console.log(doc);
+      this.user = doc; 
     });
    
   }
-
-  
-
-
-
-
 
 }

@@ -1,13 +1,17 @@
-import { Timestamp } from '@firebase/firestore-types';
-
 export interface User {
     id: string;
     firstName: string;
     lastName: string;
-    dob: Timestamp;
-    lastSeenOn: Timestamp;
-    registeredOn: Timestamp;
-    photos: string[];
+    description: string;
+    dob: Date;
+    lastSeenOn: Date;
+    registeredOn: Date;
+    photos: UserPhoto[];
     avatar: string;
     events: string[];
+}
+
+export interface UserPhoto {
+    name: string;
+    url: string;
 }

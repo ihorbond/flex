@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TimestampToDatePipe } from './pipes/timestamp-to-date.pipe';
-import { TimestampToAgePipe } from './pipes/timestamp-to-age.pipe';
+import { ToAge } from './pipes/to-age';
 
 @NgModule({
-  declarations: [TimestampToDatePipe, TimestampToAgePipe],
+  declarations: [ToAge],
   imports: [
     CommonModule
   ],
-  exports: [TimestampToDatePipe, TimestampToAgePipe]
+  exports: [ToAge]
 })
 export class SharedModule { }

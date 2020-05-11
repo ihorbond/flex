@@ -10,7 +10,26 @@
   </ion-toolbar>
 </ion-header>
 
-<div *ngIf="user">
-  <!-- <ion-textarea [(ngModel)]="user.description"></ion-textarea> -->
-</div>
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let p of user.photos;let i = index">
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="delete(i)">Delete</ion-item-option>
+      </ion-item-options>
+      <ion-item>
+        <img width="64px" height="64px" src={{p.url}}>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
+  <br />
+  <input type="file" (change)="fileChange($event.target.files)">
 
+  <div *ngIf="percentage$ | async as pct">
+    <ion-progress-bar type="determinate" [value]="pct" max="100"></ion-progress-bar>
+    {{ pct | number }}%
+  </div>
+
+  <div *ngIf="user">
+    <ion-textarea [(ngModel)]="user.description"></ion-textarea>
+  </div>
+</ion-content>
