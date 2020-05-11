@@ -1,7 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { User } from 'src/app/shared/models/user';
+import { User, UserPhoto } from 'src/app/shared/models/user';
 import { ModalController } from '@ionic/angular';
 import { DbService } from 'src/app/shared/services/db.service';
+//import { PhotoLibrary } from '@ionic-native/photo-library/ngx';
+import { finalize, tap } from 'rxjs/operators';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { Observable } from 'rxjs';
+
+//TODO: give photo deletion tasks to background worker
 
 @Component({
   selector: 'app-user-profile-edit',
@@ -10,24 +16,67 @@ import { DbService } from 'src/app/shared/services/db.service';
 })
 export class UserProfileEditComponent implements OnInit {
   @Input() user: User;
+  public percentage$: Observable<number>;
+
+  private deletedPhotos: UserPhoto[] = [];
+  private addedPhotos: UserPhoto[] = [];
+
   constructor(
     private _modalController: ModalController,
-    private _dbService: DbService
+    private _dbService: DbService,
+    private _storageService: StorageService,
+    //private _photoLibrary: PhotoLibrary
   ) { }
 
-  ngOnInit() {
-  }
+
+  ngOnInit() {}
 
   public cancel(): void {
-    this._modalController.dismiss(null);
+    console.log("new photos");
+    console.log(this.addedPhotos)
+    this.addedPhotos.forEach(async x => await this.deleteFromServer(x));
+    this._modalController.dismiss();
   }
 
-  public save(): void {
-    this._dbService.updateAt(`Users/${this.user.id}`, this.user).then(_ => {
-      this._modalController.dismiss(this.user);
-    }).catch(err => {
-      console.error(JSON.stringify(err));
-    });
-    
+  public async save(): Promise<void> {
+    await this._dbService.updateAt(`Users/${this.user.id}`, this.user).then(_ => {
+      this._modalController.dismiss();
+    }).catch(console.error);
+
+    console.log("delete photos");
+    console.log(this.deletedPhotos);
+    this.deletedPhotos.forEach(async x => await this.deleteFromServer(x));
+  }
+
+  public fileChange(files: FileList): void {
+    console.log(files);
+    let file: File = files.item(0);
+    const name = `${Date.now()}_${file.name}`;
+    const path = `images/users/${this.user.id}/${name}`;
+    const task = this._storageService.fsRef.upload(path, file);
+    this.percentage$ = task.percentageChanges();
+    task.snapshotChanges().pipe(
+      //tap(console.log),
+      finalize(async() => {
+        const url = await this._storageService.getDownloadUrl(path);
+        const photo = {
+          name: name,
+          url: url
+        };
+        (this.user.photos || []).push(photo);
+        this.addedPhotos.push(photo);
+      })
+    ).subscribe();
+  }
+
+  public delete(index: number): void {
+    const photo = this.user.photos[index];
+    this.user.photos.splice(index, 1);
+    this.deletedPhotos.push(photo);
+  }
+
+  private async deleteFromServer(photo: UserPhoto): Promise<void> {
+    const path = `images/users/${this.user.id}/${photo.name}`;
+    await this._storageService.delete(path).toPromise().catch(console.error);
   }
 }

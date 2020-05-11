@@ -6,7 +6,12 @@ export interface User {
     dob: Date;
     lastSeenOn: Date;
     registeredOn: Date;
-    photos: string[];
+    photos: UserPhoto[];
     avatar: string;
     events: string[];
+}
+
+export interface UserPhoto {
+    name: string;
+    url: string;
 }

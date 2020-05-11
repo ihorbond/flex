@@ -1,7 +1,7 @@
 <div *ngIf="user">
   <ion-slides pager="true" [options]="slideOpts">
-    <ion-slide *ngFor="let picUrl of user.photos">
-      <img src="picUrl">
+    <ion-slide *ngFor="let p of user.photos">
+      <img src="{{p.url}}">
     </ion-slide>
   </ion-slides>
   <h1>{{user.firstName}} {{user.lastName}}</h1>

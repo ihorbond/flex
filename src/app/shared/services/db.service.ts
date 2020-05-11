@@ -9,7 +9,9 @@ import { mapValues } from 'lodash';
 })
 export class DbService {
 
-  constructor(private fireStore: AngularFirestore) { }
+  constructor(
+    private fireStore: AngularFirestore
+  ) { }
 
   convertToJS(data: Object): Object {
     return mapValues(data, ((field: any) => {
