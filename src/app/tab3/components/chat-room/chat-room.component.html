@@ -1,0 +1,49 @@
+<ion-header collapse="condense">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/chat"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end" class="ion-padding-end" (click)="showOptions()">
+      <ion-icon slot="icon-only" name="ellipsis-vertical-circle-outline"></ion-icon>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-card *ngFor="let m of messages$ | async;let i = index">
+      <ion-card-content>
+        <ion-item>
+          <ion-avatar slot="start">
+            <img class="feed-user-img" src={{getAvatar(i)}} />
+          </ion-avatar>
+          <ion-label>
+            <b>{{m.timestamp.toDate()}}</b>
+          </ion-label>
+        </ion-item>
+        {{m.text}}
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)='selectImage()'>
+        <ion-icon slot="icon-only" name="image-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-textarea #newMsg rows="1" autoGrow placeholder="Say something" autocapitalize="on" autofocus clearInput>
+    </ion-textarea>
+   
+    <ion-buttons slot="end">
+      <ion-button [disabled]="!newMsg.value" (click)='sendMessage()'>
+        <ion-icon slot="icon-only" name="send-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-footer>

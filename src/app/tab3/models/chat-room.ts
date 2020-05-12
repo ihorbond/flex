@@ -1,4 +1,4 @@
-import { ChatRoomUser } from './char-room-user';
+import { ChatRoomUser } from './chat-room-user';
 
 export interface ChatRoom {
     id: string;

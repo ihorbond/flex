@@ -13,11 +13,8 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-progress-bar *ngIf="!chatRooms" type="indeterministic"></ion-progress-bar>
-
-  <ion-list *ngIf="chatRooms">
-
-    <ion-item-sliding *ngFor="let ch of chatRooms;let i = index">
+  <ion-list *ngIf="chatRooms;else loading">
+    <ion-item-sliding routerLink="rooms/{{room.id}}" *ngFor="let room of chatRooms;let i = index">
       <ion-item-options side="end">
         <ion-item-option color="danger" (click)="delete(i)">Delete</ion-item-option>
       </ion-item-options>
@@ -35,3 +32,7 @@
   </ion-list>
 
 </ion-content>
+
+<ng-template #loading>
+  <ion-progress-bar type="indeterministic"></ion-progress-bar>
+</ng-template>

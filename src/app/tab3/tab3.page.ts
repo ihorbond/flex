@@ -47,7 +47,7 @@ export class Tab3Page implements OnInit {
       exhaustMap(doc => {
         this.user = doc;
         //console.log(doc, this.user.chatRoomIds);
-        return this._dbService.collection$('Rooms', ref => ref.where(firestore.FieldPath.documentId(), "in", this.user.chatRoomIds));
+        return this._dbService.collection$('Rooms', ref => ref.where(firestore.FieldPath.documentId(), "in", this.user.chatRoomIds).limit(20));
       })
       ).subscribe(chatRooms => {
        //console.log(chatRooms);
