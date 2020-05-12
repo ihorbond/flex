@@ -13,7 +13,18 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list>
-    <app-event-card *ngFor="let event of events$ | async" [event]="event"></app-event-card>
+  <ion-list *ngIf="events$ | async as events; else loading">
+    <app-event-card *ngFor="let event of events" [event]="event"></app-event-card>
   </ion-list>
+
+  <!-- <ion-infinite-scroll threshold="300px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="crescent"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll> -->
+
+  <ng-template #loading>  
+    <ion-progress-bar class="progress-bar" type="indeterminate"></ion-progress-bar>
+  </ng-template>
 </ion-content>
