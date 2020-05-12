@@ -5,8 +5,7 @@ import { UserProfileEditComponent } from '../user-profile-edit/user-profile-edit
 import { DbService } from 'src/app/shared/services/db.service';
 import { cloneDeep } from 'lodash';
 import { Subscription } from 'rxjs';
-
-const testUserId = "ynlfVJk02V8HnhB82ZH4";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user-profile',
@@ -27,7 +26,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.subs.push(this.loadData(testUserId));
+    this.subs.push(this.loadData(environment.testUserId));
   }
 
   ngOnDestroy(): void {

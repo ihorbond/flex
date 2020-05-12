@@ -9,6 +9,7 @@ export interface User {
     photos: UserPhoto[];
     avatar: string;
     events: string[];
+    chatRoomIds: string[];
 }
 
 export interface UserPhoto {

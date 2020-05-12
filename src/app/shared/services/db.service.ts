@@ -13,6 +13,10 @@ export class DbService {
     private fireStore: AngularFirestore
   ) { }
 
+  get fs(): AngularFirestore {
+    return this.fireStore;
+  }
+
   convertToJS(data: Object): Object {
     return mapValues(data, ((field: any) => {
       // Timestamp -> Date
@@ -21,7 +25,7 @@ export class DbService {
       }
 
       // nested object -> recursively convert nested object
-      if (typeof field === 'object'){
+      if (typeof field === 'object' && !Array.isArray(field)){
         field = this.convertToJS(field)
       }
 
