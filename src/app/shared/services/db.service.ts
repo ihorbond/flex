@@ -13,22 +13,6 @@ export class DbService {
     private fireStore: AngularFirestore
   ) { }
 
-  convertToJS(data: Object): Object {
-    return mapValues(data, ((field: any) => {
-      // Timestamp -> Date
-      if (field.toDate) {
-        return field.toDate();
-      }
-
-      // nested object -> recursively convert nested object
-      if (typeof field === 'object'){
-        field = this.convertToJS(field)
-      }
-
-      return field;
-    }));
-  }
-
   // get collection
   collection$(path: string, query?: QueryFn): Observable<any> {
     return this.fireStore
@@ -38,9 +22,6 @@ export class DbService {
         map(actions => {
           return actions.map(a => {
             let data: Object = a.payload.doc.data();
-
-            data = this.convertToJS(data);
-
             const id = a.payload.doc.id;
             return { id, ...data }
           })
@@ -56,9 +37,6 @@ export class DbService {
       .pipe(
         map(doc => {
           let data: Object = doc.payload.data();
-
-          data = this.convertToJS(data);
-
           return { id: doc.payload.id, ...data }
         })
       );

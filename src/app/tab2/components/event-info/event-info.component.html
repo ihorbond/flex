@@ -1,15 +1,36 @@
-<ion-content class="ion-padding">
+<ion-content padding="true">
   <ng-container *ngIf="(eventInfo$ | async) as eventInfo; else loading">
-    <div>
-      <p>What: {{ eventInfo.description }}</p>
-      <p>Where: {{ eventInfo.place }}</p>
-      <p>When: {{ eventInfo?.date?.toDate() | date:'longDate' }}</p>
-      <p>Going: {{ eventInfo.participants }}</p>
-    </div>
+
+    <ion-card>
+      <img src="{{eventInfo.imageURL}}" />
+    </ion-card>
+
+    <ion-list class="event-info" lines="none">
+      <ion-item>
+        <ion-label class="title">{{ eventInfo.title | uppercase}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-note>{{ eventInfo.description }}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="location-outline"></ion-icon>
+        <ion-label>{{ eventInfo.location.name }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-label>{{ eventInfo.startsAt.toDate() | date:'longDate' }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="people-outline"></ion-icon>
+        <ion-label>
+          {{ eventInfo.participantsCount }}
+        </ion-label>
+      </ion-item>
+
+    </ion-list>
   </ng-container>
 
-  <ng-template #loading>  
+  <ng-template #loading>
     <ion-progress-bar class="progress-bar" type="indeterminate"></ion-progress-bar>
   </ng-template>
-
 </ion-content>

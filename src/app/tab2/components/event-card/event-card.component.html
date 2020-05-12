@@ -3,7 +3,7 @@
   <img src="{{event.imageURL}}" />
   <div class="card-info">
     <span class="card-title">{{event.title | uppercase}}</span>
-    <span class="card-subtitle">{{event.date.toDate() | date:'longDate' | uppercase }}</span>
+    <span class="card-subtitle">{{event.startsAt.toDate() | date:'longDate' | uppercase }}</span>
     <span class="event-organizer">{{event.organizer.name | uppercase}}</span>
   </div>
 </ion-card>

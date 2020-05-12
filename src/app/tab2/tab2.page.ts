@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { EventsService } from './services/events.service';
 import { EventInfo } from './models/event-info';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tab2',
@@ -13,8 +14,13 @@ export class Tab2Page {
 
   constructor(private _eventsService: EventsService) {}
 
-  ngOnInit() {
-    this.events$ = this._eventsService.getEvents();
+  loadData(event) {
+    console.log(event)
   }
 
+  ngOnInit() {
+    this.events$ = this._eventsService.getEvents().pipe(
+      tap(value => console.log(value))
+    );
+  }
 }
