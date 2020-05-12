@@ -9,13 +9,16 @@ import { DbService } from 'src/app/shared/services/db.service';
 })
 export class EventsService {
 
-  constructor(private db: DbService) { }
+  constructor(private _db: DbService) { }
 
   public getEvents(): Observable<EventInfo[]> {
-    return this.db.collection$('Events')
+    return this._db.collection$('Events', ref => {
+      return ref
+        .orderBy('startsAt', 'desc')
+    });
   }
 
   public getEventById(id: string): Observable<EventInfo> {
-    return this.db.doc$(`Events/${id}`)
+    return this._db.doc$(`Events/${id}`);
   }
 }

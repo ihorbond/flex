@@ -2,3 +2,22 @@
     position: fixed;
     bottom: 5px;
 }
+ion-card {
+    max-height: 300px;
+    display: flex;
+    align-items: center;
+}
+.title {
+    font-size: 40px;
+    // display: flex;
+    // justify-content: center;
+}
+.event-info {
+    ion-icon {
+        padding-right: 10px;
+    }
+}
+
+ion-content > .scroll-content{
+    padding-bottom: 56px;
+  }

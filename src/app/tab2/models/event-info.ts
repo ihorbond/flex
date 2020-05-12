@@ -8,6 +8,6 @@ export class EventInfo {
     description: string;
     imageURL: string;
     location: Location;
-    date: Timestamp;
-    particapants: number;
+    startsAt: Timestamp;
+    participantsCount: number;
 }
