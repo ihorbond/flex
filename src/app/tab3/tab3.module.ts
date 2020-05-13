@@ -6,7 +6,6 @@ import { Tab3Page } from './tab3.page';
 
 import { Tab3PageRoutingModule } from './tab3-routing.module'
 import { ChatRoomComponent } from './components/chat-room/chat-room.component';
-import { InfiniteScrollDirective } from './infinite-scroll.directive';
 
 @NgModule({
   imports: [
@@ -15,6 +14,6 @@ import { InfiniteScrollDirective } from './infinite-scroll.directive';
     FormsModule,
     Tab3PageRoutingModule
   ],
-  declarations: [Tab3Page, ChatRoomComponent, InfiniteScrollDirective]
+  declarations: [Tab3Page, ChatRoomComponent]
 })
 export class Tab3PageModule {}

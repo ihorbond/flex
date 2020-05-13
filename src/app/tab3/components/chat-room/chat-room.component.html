@@ -6,11 +6,11 @@
     <ion-buttons slot="end" class="ion-padding-end" (click)="showOptions()">
       <ion-icon slot="icon-only" name="ellipsis-vertical-circle-outline"></ion-icon>
     </ion-buttons>
-    <ion-title>{{title}}</ion-title>
+    <ion-title>{{roomTitle}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [scrollEvents]="true" (ionScroll)="scrollHandler($event)" [fullscreen]="true" class="rotate">
+<ion-content (ionScroll)="scrollHandler($event)" [fullscreen]="true" class="rotate">
 
   <div [hidden]="!isLoadingOlderMessages" class="ion-text-center ion-padding-top">
     <ion-spinner></ion-spinner>
