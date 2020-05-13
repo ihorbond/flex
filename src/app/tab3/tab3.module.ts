@@ -6,14 +6,15 @@ import { Tab3Page } from './tab3.page';
 
 import { Tab3PageRoutingModule } from './tab3-routing.module'
 import { ChatRoomComponent } from './components/chat-room/chat-room.component';
+import { InfiniteScrollDirective } from './infinite-scroll.directive';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    Tab3PageRoutingModule,
+    Tab3PageRoutingModule
   ],
-  declarations: [Tab3Page, ChatRoomComponent]
+  declarations: [Tab3Page, ChatRoomComponent, InfiniteScrollDirective]
 })
 export class Tab3PageModule {}

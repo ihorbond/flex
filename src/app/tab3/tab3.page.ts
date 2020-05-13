@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
 import { User } from '../shared/models/user';
 import { DbService } from '../shared/services/db.service';
 import { first, exhaustMap } from 'rxjs/operators';
@@ -17,10 +17,12 @@ export class Tab3Page implements OnInit {
   private user: User = null;
 
   constructor(
+    public el: ElementRef,
     private _dbService: DbService
   ) { }
 
   ngOnInit() {
+    //var userId = localStorage.getItem('userId');
     this.loadData(env.testUserId);
   }
 
@@ -59,4 +61,10 @@ export class Tab3Page implements OnInit {
     const users = room.users;
     return Object.keys(users).find(key => key !== this.user.id);
   }
+
+
+
+  // public onScroll(event) {
+  //   console.log(event);
+  // }
 }

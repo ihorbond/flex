@@ -20,7 +20,7 @@
       </ion-item-options>
       <ion-item>
         <ion-avatar slot="start">
-          <img class="feed-user-img" src={{getRoomAvatar(room)}} />
+          <img src={{getRoomAvatar(room)}} />
         </ion-avatar>
         <ion-label>
           <b>{{getRoomName(room)}}</b>
@@ -36,3 +36,4 @@
 <ng-template #loading>
   <ion-progress-bar type="indeterministic"></ion-progress-bar>
 </ng-template>
+
