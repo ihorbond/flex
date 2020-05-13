@@ -14,16 +14,16 @@
   </ion-header>
 
   <ion-list *ngIf="chatRooms;else loading">
-    <ion-item-sliding routerLink="rooms/{{room.id}}" *ngFor="let room of chatRooms;let i = index">
+    <ion-item-sliding routerLink="rooms/{{room.id}}" [state]="room" *ngFor="let room of chatRooms;let i = index">
       <ion-item-options side="end">
         <ion-item-option color="danger" (click)="delete(i)">Delete</ion-item-option>
       </ion-item-options>
       <ion-item>
         <ion-avatar slot="start">
-          <img class="feed-user-img" src={{getChatRoomAvatar(i)}} />
+          <img class="feed-user-img" src={{getRoomAvatar(room)}} />
         </ion-avatar>
         <ion-label>
-          <b>{{getChatRoomName(i)}}</b>
+          <b>{{getRoomName(room)}}</b>
           <p>{{chatRooms[i].preview}}</p>
         </ion-label>
       </ion-item>

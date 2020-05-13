@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { User, UserPhoto } from 'src/app/shared/models/user';
 import { ModalController } from '@ionic/angular';
 import { DbService } from 'src/app/shared/services/db.service';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { Observable } from 'rxjs';
 
@@ -55,7 +55,7 @@ export class UserProfileEditComponent implements OnInit {
     task.snapshotChanges().pipe(
       finalize(async() => {
         const url = await this._storageService.getDownloadUrl(path);
-        const photo = {
+        const photo: UserPhoto = {
           name: name,
           url: url
         };

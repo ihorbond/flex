@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
+import { AngularFirestore, QueryFn, DocumentChangeAction } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { mapValues } from 'lodash';
+import { filter } from 'lodash'
+import { DocumentChangeType } from '@firebase/firestore-types';
 
 @Injectable({
   providedIn: 'root'
@@ -17,19 +18,23 @@ export class DbService {
     return this.fireStore;
   }
 
-  // get collection
-  collection$(path: string, query?: QueryFn): Observable<any> {
+
+  //get collection
+  collection$<T>(path: string, query?: QueryFn): Observable<T[]> {
     return this.fireStore
       .collection(path, query)
       .snapshotChanges()
       .pipe(
-        map(actions => {
-          return actions.map(a => {
-            let data: Object = a.payload.doc.data();
-            const id = a.payload.doc.id;
-            return { id, ...data }
-          })
-        })
+        map(this.mapActions)
+      );
+  }
+
+  collectionStateChanges$<T>(path: string, query?: QueryFn, docChangeType?: DocumentChangeType[]): Observable<T[]> {
+    return this.fireStore
+      .collection(path, query)
+      .stateChanges(docChangeType)
+      .pipe(
+        map(this.mapActions)
       );
   }
 
@@ -60,6 +65,15 @@ export class DbService {
 
   delete(path: string) {
     return this.fireStore.doc(path).delete();
+  }
+
+  private mapActions<T>(actions) {
+    return actions.map(a => {
+      //console.log("has pending writes: ", a.payload.doc.metadata, a.payload.doc.data())
+      let data = <T>a.payload.doc.data();
+      const id = a.payload.doc.id;
+      return { id, ...data };
+    })
   }
 
 

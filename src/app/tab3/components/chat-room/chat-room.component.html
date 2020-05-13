@@ -10,22 +10,32 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-list>
-    <ion-card *ngFor="let m of messages$ | async;let i = index">
+<ion-content [fullscreen]="true" class="rotate">
+  <ion-list class="rotate">
+    <ion-card *ngFor="let m of messages">
       <ion-card-content>
         <ion-item>
           <ion-avatar slot="start">
-            <img class="feed-user-img" src={{getAvatar(i)}} />
+            <img class="feed-user-img" src={{getAvatar(m)}} />
           </ion-avatar>
           <ion-label>
-            <b>{{m.timestamp.toDate()}}</b>
+            <b>{{m.timestamp.toDate() | date:'short'}}</b>
           </ion-label>
         </ion-item>
-        {{m.text}}
+        <p>{{m.text}}</p>
       </ion-card-content>
     </ion-card>
   </ion-list>
+
+  <!-- <ion-infinite-scroll class="rotate ion-no-margin" (ionInfinite)="loadMoreMessages($event)">
+    <ion-infinite-scroll-content
+      class="ion-no-margin"
+      loadingSpinner="bubbles"
+      loadingText="Loading...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll> -->
+
+
 </ion-content>
 
 <ion-footer>

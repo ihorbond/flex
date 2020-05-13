@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../shared/models/user';
 import { DbService } from '../shared/services/db.service';
 import { first, exhaustMap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { environment as env } from 'src/environments/environment';
 import { ChatRoom } from './models/chat-room';
 import { firestore } from 'firebase/app';
 
@@ -21,19 +21,17 @@ export class Tab3Page implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadData(environment.testUserId);
+    this.loadData(env.testUserId);
   }
 
-  public getChatRoomAvatar(roomIdx: number): string {
-    const users = this.chatRooms[roomIdx].users;
-    const userId = Object.keys(users).find(key => key !== this.user.id);
-    return users[userId].avatar;
+  public getRoomAvatar(room: ChatRoom): string {
+    const userId = this.getUserId(room);
+    return room.users[userId].avatar;
   }
 
-  public getChatRoomName(roomIdx: number): string {
-    const users = this.chatRooms[roomIdx].users;
-    const userId = Object.keys(users).find(key => key !== this.user.id);
-    return users[userId].name;
+  public getRoomName(room: ChatRoom): string {
+    const userId = this.getUserId(room);
+    return room.users[userId].name;
   }
 
   public delete(roomIdx: number): void {
@@ -42,16 +40,23 @@ export class Tab3Page implements OnInit {
   }
 
   private loadData(userId: string): void {
-    this._dbService.doc$(`Users/${userId}`).pipe(
+    this._dbService.doc$(`${env.collections.users}/${userId}`).pipe(
       first(),
       exhaustMap(doc => {
         this.user = doc;
         //console.log(doc, this.user.chatRoomIds);
-        return this._dbService.collection$('Rooms', ref => ref.where(firestore.FieldPath.documentId(), "in", this.user.chatRoomIds).limit(20));
+        return this._dbService.collection$<ChatRoom>(
+          env.collections.chatRooms,
+          ref => ref.where(firestore.FieldPath.documentId(), "in", this.user.chatRoomIds).limit(10));
       })
       ).subscribe(chatRooms => {
        //console.log(chatRooms);
        this.chatRooms = chatRooms;
      }, console.error);
+  }
+
+  private getUserId(room: ChatRoom): string {
+    const users = room.users;
+    return Object.keys(users).find(key => key !== this.user.id);
   }
 }
