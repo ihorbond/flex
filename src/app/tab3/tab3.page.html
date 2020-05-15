@@ -10,8 +10,8 @@
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Messages</ion-title>
-      <ion-buttons slot="end">
-        <ion-icon slot="icon-only" class="ion-padding-end" name="add-circle-outline" (click)="createRoom()">
+      <ion-buttons slot="end" class="ion-padding-end">
+        <ion-icon slot="icon-only" name="add-circle-outline" (click)="createRoom()">
         </ion-icon>
       </ion-buttons>
     </ion-toolbar>
@@ -24,7 +24,7 @@
         <ion-item-options side="end">
           <ion-item-option color="danger" (click)="delete(i)">Delete</ion-item-option>
         </ion-item-options>
-        <ion-item>
+        <ion-item color="{{checkUnread(room) ? 'tertiary':'undefined'}}">
           <ion-avatar slot="start">
             <img src={{getRoomAvatar(room)}} />
           </ion-avatar>
