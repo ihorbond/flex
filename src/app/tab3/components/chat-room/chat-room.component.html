@@ -11,7 +11,7 @@
 </ion-header>
 
 <ion-content (ionScroll)="scrollHandler($event)" [fullscreen]="true" class="rotate">
-
+  
   <div [hidden]="!isLoadingOlderMessages" class="ion-text-center ion-padding-top">
     <ion-spinner></ion-spinner>
   </div>
@@ -37,7 +37,7 @@
 <ion-footer>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)='selectImage()'>
+      <ion-button (click)="selectImage()">
         <ion-icon slot="icon-only" name="image-outline"></ion-icon>
       </ion-button>
     </ion-buttons>

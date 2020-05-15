@@ -47,14 +47,14 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
     //enable scroll events if there is more messages to show than loaded initially
     this.ionContent.scrollEvents = this.room.numOfMessages > this.initialMessageFetchLimit;
     this.ionContent.getScrollElement().then(el => this.scrollingElement = el);
-    this.ionContent.scrollToBottom();
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
     this.messagesSubscription.unsubscribe();
 
+    //TODO: give this to bg worker or make part of transaction with newly sent message
     //update room's message count
-    this._dbService.updateAt(`${env.collections.chatRooms}/${this.room.id}`, this.room);
+    await this._dbService.updateAt(`${env.collections.chatRooms}/${this.room.id}`, this.room);
   }
 
   public scrollHandler(e: any): void {
@@ -81,7 +81,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log("selectImage");
   }
 
-  public sendMessage(): void {
+  public async sendMessage(): Promise<void> {
     this.room.numOfMessages++;
 
     const msg: ChatRoomMessage = {
@@ -90,7 +90,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
       timestamp: new Date()
     };
 
-    this._dbService.updateAt(`${env.collections.chatRooms}/${this.room.id}/Messages`, msg);
+    await this._dbService.updateAt(`${env.collections.chatRooms}/${this.room.id}/Messages`, msg);
     this.newMsgTextArea.value = null;
   }
 
