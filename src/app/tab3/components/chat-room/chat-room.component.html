@@ -1,4 +1,4 @@
-<ion-header collapse="condense">
+<!-- <ion-header collapse="condense">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/chat"></ion-back-button>
@@ -11,25 +11,25 @@
 </ion-header>
 
 <ion-content (ionScroll)="scrollHandler($event)" [fullscreen]="true" class="rotate">
-  
+
   <div [hidden]="!isLoadingOlderMessages" class="ion-text-center ion-padding-top">
     <ion-spinner></ion-spinner>
   </div>
-  
+
   <ion-list>
-      <ion-card *ngFor="let m of messages">
-        <ion-card-content>
-          <ion-item>
-            <ion-thumbnail slot="{{m.authorId === currUserId ? 'start':'end'}}">
-              <img src={{getAvatar(m)}} />
-            </ion-thumbnail>
-            <ion-label>
-              <b>{{m.timestamp.toDate() | date:'short'}}</b>
-              <p>{{m.text}}</p>
-            </ion-label>
-          </ion-item>
-        </ion-card-content>
-      </ion-card>
+    <ion-card *ngFor="let m of messages">
+      <ion-card-content>
+        <ion-item>
+          <ion-thumbnail slot="{{m.authorId === currUserId ? 'start':'end'}}">
+            <img src={{getAvatar(m)}} />
+          </ion-thumbnail>
+          <ion-label>
+            <b>{{m.timestamp.toDate() | date:'short'}}</b>
+            <p>{{m.text}}</p>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
   </ion-list>
 
 </ion-content>
@@ -44,7 +44,7 @@
 
     <ion-textarea #newMsg rows="1" autoGrow placeholder="Say something" autocapitalize="on" autofocus clearInput>
     </ion-textarea>
-   
+
     <ion-buttons slot="end">
       <ion-button [disabled]="!newMsg.value" (click)='sendMessage()'>
         <ion-icon slot="icon-only" name="send-outline"></ion-icon>
@@ -52,4 +52,4 @@
     </ion-buttons>
 
   </ion-toolbar>
-</ion-footer>
+</ion-footer> -->
