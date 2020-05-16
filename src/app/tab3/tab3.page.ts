@@ -7,6 +7,14 @@ import { ChatRoom } from './models/chat-room';
 import { firestore } from 'firebase/app';
 import { DocumentReference } from '@firebase/firestore-types';
 import { IonContent } from '@ionic/angular';
+import * as moment from 'moment';
+
+const formats = {
+  sameDay: 'h:mm A',
+  lastDay: '[Yesterday]',
+  lastWeek: 'dddd',
+  sameElse: 'MM/DD/YY'
+}
 
 @Component({
   selector: 'app-tab3',
@@ -35,6 +43,10 @@ export class Tab3Page implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.ionContent.getScrollElement().then(el => this.scrollingElement = el);
+  }
+
+  public timeToNow(roomIdx: number): string {
+    return moment(this.chatRooms[roomIdx].createdOn.toDate()).calendar(null, formats);
   }
 
   public getRoomAvatar(room: ChatRoom): string {
@@ -74,9 +86,10 @@ export class Tab3Page implements OnInit, AfterViewInit {
     const offset = this.scrollingElement.offsetHeight;
     //console.log(top, height, offset)
 
-    if (top > height - offset - 1 && !this.isLoadingOlderMessages) {
+    if (!this.isLoadingOlderMessages && top > height - offset - 1) {
       console.log("bottom");
       this.isLoadingOlderMessages = true;
+      this.ionContent.scrollToBottom();
       const lastLoadedIndex = this.user.chatRooms.findIndex(x => x === this.lastLoadedChatRoomDocRef);
       const startIdx = lastLoadedIndex - this.chatRoomLoadStep > 0 ? lastLoadedIndex - this.chatRoomLoadStep : 0;
       this.loadChatRooms(startIdx, lastLoadedIndex);
@@ -156,8 +169,7 @@ export class Tab3Page implements OnInit, AfterViewInit {
         const chatRoom = doc.data() as ChatRoom;
         chatRoom.id = doc.id;
         return chatRoom;
-      })
-      .reverse());
+      }).reverse());
 
     this.chatRooms = this.chatRooms.concat(loadedChatRooms)
 
@@ -170,7 +182,7 @@ export class Tab3Page implements OnInit, AfterViewInit {
     }
 
     if (!this.isFirstTimeLoad)
-      setTimeout(() => this.ionContent.scrollToBottom(), 100);
+      setTimeout(() => this.ionContent.scrollToBottom(500), 100);
 
     this.lastLoadedChatRoomDocRef = this.user.chatRooms[start];
     this.isLoadingOlderMessages = false;

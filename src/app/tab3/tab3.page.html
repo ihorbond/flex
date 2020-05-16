@@ -18,26 +18,33 @@
   </ion-header>
 
   <div *ngIf="chatRooms.length > 0;else loading">
-    
-    <ion-list >
+
+    <ion-list>
       <ion-item-sliding routerLink="rooms/{{room.id}}" [state]="room" *ngFor="let room of chatRooms;let i = index">
         <ion-item-options side="end">
           <ion-item-option color="danger" (click)="delete(i)">Delete</ion-item-option>
         </ion-item-options>
-        <ion-item color="{{checkUnread(room) ? 'tertiary':'undefined'}}">
+        <ion-item>
+
           <ion-avatar slot="start">
-            <img src={{getRoomAvatar(room)}} />
+            <img [ngClass]="{'unread': checkUnread(room)}" src={{getRoomAvatar(room)}} />
           </ion-avatar>
           <ion-label>
-            <b>{{getRoomName(room)}}</b>
-            <p>{{chatRooms[i].createdOn.toDate() | date:'short'}}</p>
+            <div class="room-details">
+              <b>{{getRoomName(room)}}</b>
+              <span class="room-text">{{timeToNow(i)}} ></span>
+            </div>
+            <div class="room-details">
+              <span class="room-text">{{room.preview}}</span>
+              <!-- <ion-note class="ion-padding-end" color="dark">{{room.numOfMessages}}</ion-note> -->
+            </div>
           </ion-label>
-          <ion-badge slot="end" color="light">{{room.numOfMessages}}</ion-badge>
+
         </ion-item>
-  
+
       </ion-item-sliding>
     </ion-list>
-  
+
     <div [hidden]="!isLoadingOlderMessages" class="ion-text-center ion-padding-top">
       <ion-spinner></ion-spinner>
     </div>
