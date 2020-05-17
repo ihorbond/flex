@@ -1,7 +1,7 @@
 <div *ngIf="user" class="ion-padding">
   <ion-slides [pager]="user.photos?.length > 1" [options]="slideOpts">
     <ion-slide *ngFor="let p of user.photos">
-      <img src="{{p.url}}">
+      <ion-img src="{{p.url}}"></ion-img>
     </ion-slide>
   </ion-slides>
   <h1>{{user.firstName}} {{user.lastName}}</h1>

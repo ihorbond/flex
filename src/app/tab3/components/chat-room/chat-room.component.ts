@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit, Query } from '@angular/core';
 import { DbService } from 'src/app/shared/services/db.service';
 import { Router } from '@angular/router';
 import { first, map, tap, delay } from 'rxjs/operators';
@@ -7,7 +7,8 @@ import { environment as env } from 'src/environments/environment';
 import { ChatRoomMessage } from '../../models/message';
 import { IonTextarea, IonContent } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { Timestamp } from '@firebase/firestore-types';
+import { firestore } from 'firebase/app';
+import { Transaction } from '@firebase/firestore-types';
 
 
 @Component({
@@ -15,20 +16,21 @@ import { Timestamp } from '@firebase/firestore-types';
   templateUrl: './chat-room.component.html',
   styleUrls: ['./chat-room.component.scss'],
 })
-export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(IonTextarea) newMsgTextArea: IonTextarea;
   @ViewChild(IonContent) ionContent: IonContent;
 
   public messages: ChatRoomMessage[] = [];
   public isLoadingOlderMessages: boolean;
-  public currUserId = env.testUserId;
+  public readonly currUserId = env.testUserId;
 
   private room: ChatRoom = null;
-  private messagesSubscription: Subscription;
-  private scrollingElement: HTMLElement;
+  private messagesSub: Subscription;
+  private scrollElement: HTMLElement;
   private lastDocRef: ChatRoomMessage = null;
-  private readonly initialMessageFetchLimit: number = 10;
+  private readonly msgFetchLimit: number = 10;
   private lastScrollHeight: number = 0;
+  private otherUserId: string;
 
   constructor(
     private _dbService: DbService,
@@ -38,42 +40,44 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     //this.currUserId = localStorage.getItem('userId');
     this.room = this._router.getCurrentNavigation().extras.state as ChatRoom;
+    this.otherUserId = Object.keys(this.room.users).find(key => key !== this.currUserId);
     console.log("room from router's state ", this.room);
+    this.updateRoom();
     this.subscribeToMessages();
   }
 
   ngAfterViewInit() {
-    this.ionContent.getScrollElement().then(el => this.scrollingElement = el);
-    this.toggleScrollEvents(this.room.numOfMessages > this.initialMessageFetchLimit);
-    this.markAsRead();
+    this.ionContent.getScrollElement().then(el => this.scrollElement = el);
+    this.toggleScrollEvents(this.room.msgCount > this.msgFetchLimit);
   }
 
   ngOnDestroy() {
-    this.messagesSubscription.unsubscribe();
+    this.messagesSub.unsubscribe();
 
     //TODO: give this to bg worker or make part of transaction with newly sent message
-    //update room's message count
-    this._dbService.updateAt(`${env.collections.chatRooms}/${this.room.id}`, this.room);
+    this._dbService.fs.collection(env.collections.chatRooms)
+      .doc<ChatRoom>(this.room.id)
+      .update({ [`users.${this.otherUserId}.isInTheRoom`]: false });
+  }
+
+  private updateRoom(): void {
+    const currUser = this.room.users[this.currUserId];
+    if (currUser.unreadMsgCount > 0) {
+      currUser.unreadMsgCount = 0;
+    }
+    currUser.isInTheRoom = true;
+    const path = `${env.collections.chatRooms}/${this.room.id}`;
+    this._dbService.updateAt(path, this.room).catch(console.error);
   }
 
   public get roomTitle(): string {
-    const id = Object.keys(this.room.users).find(key => key !== this.currUserId);
-    return "Chat with " + this.room.users[id].name;
+    return "Chat with " + this.room.users[this.otherUserId].name;
   }
 
-  public markAsRead(): void {
-    const currUser = this.room.users[this.currUserId];
-    if (currUser.hasUnread) {
-      currUser.hasUnread = false;
-      const path = `${env.collections.chatRooms}/${this.room.id}`;
-      this._dbService.updateAt(path, this.room).catch(console.error);
-    }
-  };
-
   public scrollHandler(e: any): void {
-    const top = this.scrollingElement.scrollTop;
-    const height = this.scrollingElement.scrollHeight;
-    const offset = this.scrollingElement.offsetHeight;
+    const top = this.scrollElement.scrollTop;
+    const height = this.scrollElement.scrollHeight;
+    const offset = this.scrollElement.offsetHeight;
 
     if (top > height - offset - 1) {
       console.log("bottom");
@@ -95,27 +99,46 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public async sendMessage(): Promise<void> {
-    const msg: ChatRoomMessage = {
+    const roomDocRef = this._dbService.fs.collection(env.collections.chatRooms).doc(this.room.id).ref;
+    const newMsgId = this._dbService.fs.createId();
+    const newMsDocgRef = this._dbService.fs.collection(this.messagesPath).doc(newMsgId).ref;
+    const increment = firestore.FieldValue.increment(1);
+
+    const newMsg: ChatRoomMessage = {
+      id: newMsgId,
       authorId: this.currUserId,
-      text: this.newMsgTextArea.value,
-      timestamp: new Date()
+      text: this.newMsgTextArea.value.substring(0,30),
+      timestamp: firestore.Timestamp.fromDate(new Date())
     };
 
-    this._dbService.updateAt(this.messagesPath, msg).then(_ => {
-      this.newMsgTextArea.value = null;
-      this.room.numOfMessages++;
-    }).catch(console.error);
+    this.newMsgTextArea.value = null;
+
+    this._dbService.fs.firestore.runTransaction((transaction: Transaction) => {
+      return transaction.get(roomDocRef).then(doc => {
+        const room = doc.data() as ChatRoom;
+        const unreadMsgCount = room.users[this.otherUserId].isInTheRoom ? 0 : increment;
+        const updateData = {
+          msgCount: increment,
+          lastMessage: newMsg,
+          [`users.${this.otherUserId}.unreadMsgCount`]: unreadMsgCount
+        }
+        transaction.update(roomDocRef, updateData);
+        transaction.set(newMsDocgRef, newMsg);
+        //return {...room, ...updateData};
+      }).catch(console.error);
+    });
+
   }
 
   public getAvatar(msg: ChatRoomMessage): string {
     return this.room.users[msg.authorId].avatar;
   }
 
-  private loadMoreMessages(limit: number = 5): void {
+  private loadMoreMessages(): void {
     this.isLoadingOlderMessages = true;
     this._dbService.collection$<ChatRoomMessage>(
       this.messagesPath,
-      ref => ref.orderBy('timestamp', 'desc').startAfter(this.lastDocRef.timestamp as Timestamp).limit(limit)
+      ref => ref.orderBy('timestamp', 'desc').startAfter(this.lastDocRef.timestamp).limit(this.msgFetchLimit)
     ).pipe(
       first(),
       tap(messages => this.lastDocRef = messages[messages.length - 1]),
@@ -131,15 +154,15 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private subscribeToMessages(): void {
-    this.messagesSubscription = this._dbService.collectionStateChanges$<ChatRoomMessage>(
+    this.messagesSub = this._dbService.collectionStateChanges$<ChatRoomMessage>(
       this.messagesPath,
-      ref => ref.orderBy('timestamp', 'desc').limit(this.initialMessageFetchLimit),
+      ref => ref.orderBy('timestamp', 'desc').limit(this.msgFetchLimit),
       ['added']
     ).pipe(
       tap(messages => {
-        if (this.isFirstTimeLoad && messages.length > 0) {
+        if (!this.lastDocRef && messages.length > 0) {
           this.lastDocRef = messages[messages.length - 1];
-          setTimeout(() => this.ionContent.scrollToBottom(), 100);
+          setTimeout(() => this.ionContent.scrollToBottom(), 200);
         }
       }),
       map(messages => messages.reverse())
@@ -150,10 +173,6 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private get messagesPath(): string {
     return `${env.collections.chatRooms}/${this.room.id}/Messages`;
-  }
-
-  private isFirstTimeLoad(): boolean {
-    return this.lastDocRef === null;
   }
 
   /**
@@ -169,13 +188,8 @@ export class ChatRoomComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   private resetScroll(): void {
     setTimeout(() => {
-      this.scrollingElement.scrollTop += this.scrollingElement.scrollHeight - this.lastScrollHeight - 80;
+      this.scrollElement.scrollTop += this.scrollElement.scrollHeight - this.lastScrollHeight - 80;
     }, 100);
   }
-  // public queryFn(ref: CollectionReference): Query<DocumentData> {
-  //   return this.mostRecentDocRef 
-  //     ? ref.orderBy('timestamp', 'desc').endBefore(this.mostRecentDocRef.timestamp as Timestamp).limit(2) 
-  //     : ref.orderBy('timestamp', 'desc').limit(2);
-  // }
 
 }

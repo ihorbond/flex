@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, QueryFn, DocumentChangeAction } from '@angular/fire/firestore';
+import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { filter } from 'lodash'
 import { DocumentChangeType } from '@firebase/firestore-types';
 
 @Injectable({
@@ -63,6 +62,7 @@ export class DbService {
     }
   }
 
+
   delete(path: string) {
     return this.fireStore.doc(path).delete();
   }
@@ -71,8 +71,7 @@ export class DbService {
     return actions.map(a => {
       //console.log("has pending writes: ", a.payload.doc.metadata, a.payload.doc.data())
       let data = <T>a.payload.doc.data();
-      const id = a.payload.doc.id;
-      return { id, ...data };
+      return { id: a.payload.doc.id, ...data };
     })
   }
 
