@@ -1,4 +1,4 @@
-<!-- <ion-header collapse="condense">
+<ion-header collapse="condense">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/chat"></ion-back-button>
@@ -21,7 +21,7 @@
       <ion-card-content>
         <ion-item>
           <ion-thumbnail slot="{{m.authorId === currUserId ? 'start':'end'}}">
-            <img src={{getAvatar(m)}} />
+            <ion-img src={{getAvatar(m)}}></ion-img>
           </ion-thumbnail>
           <ion-label>
             <b>{{m.timestamp.toDate() | date:'short'}}</b>
@@ -42,7 +42,7 @@
       </ion-button>
     </ion-buttons>
 
-    <ion-textarea #newMsg rows="1" autoGrow placeholder="Say something" autocapitalize="on" autofocus clearInput>
+    <ion-textarea #newMsg rows="1" autoGrow placeholder="Say something" autocapitalize autofocus clearInput>
     </ion-textarea>
 
     <ion-buttons slot="end">
@@ -52,4 +52,4 @@
     </ion-buttons>
 
   </ion-toolbar>
-</ion-footer> -->
+</ion-footer>

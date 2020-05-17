@@ -4,10 +4,12 @@
 }
 
 .room-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: smaller;
     color: #6f6969
 }
 
-.unread {
-    box-shadow: 0px 0px 8px 4px #008fd4;
-}
+// .unread {
+//     box-shadow: 0px 0px 8px 4px #008fd4;
+// }

@@ -29,7 +29,7 @@
 
         <ion-item routerLink="rooms/{{room.id}}" [state]="room">
           <ion-avatar slot="start">
-            <img [ngClass]="{'unread': hasUnread(room)}" src={{getRoomAvatar(room)}} />
+            <ion-img src={{getRoomAvatar(room)}} ></ion-img>
           </ion-avatar>
           <ion-label>
             <div class="room-details">
@@ -38,7 +38,7 @@
             </div>
             <div class="room-details">
               <span class="room-text">{{room.lastMessage.text}}</span>
-              <!-- <ion-note class="ion-padding-end" color="dark">{{room.numOfMessages}}</ion-note> -->
+              <ion-note *ngIf="hasUnread(room)" class="ion-padding-end" color="dark">{{room.users[userId].unreadMsgCount}}</ion-note>
             </div>
           </ion-label>
         </ion-item>

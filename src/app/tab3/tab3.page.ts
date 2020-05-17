@@ -23,9 +23,9 @@ const formats = {
 })
 export class Tab3Page implements OnInit, OnDestroy {
   public chatRooms: ChatRoom[] = null;
+  public userId = env.testUserId;
 
   private user: User = null;
-  private userId = env.testUserId;
   private chatRoomFetchLimit: number = 10;
   private chatRoomsSub: Subscription = null;
 
@@ -63,6 +63,7 @@ export class Tab3Page implements OnInit, OnDestroy {
   public delete(roomIdx: number): void {
     const roomId = this.chatRooms[roomIdx].id;
     console.log("deleting room with ID ", roomId);
+    this.chatRooms.splice(roomIdx, 1);
     this._dbService.delete(`${env.collections.chatRooms}/${roomId}`);
   }
 
