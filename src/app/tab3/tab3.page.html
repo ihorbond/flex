@@ -27,7 +27,7 @@
           </ion-item-option>
         </ion-item-options>
 
-        <ion-item routerLink="rooms/{{room.id}}" [state]="room">
+        <ion-item routerLink="{{room.id}}" [state]="room">
           <ion-avatar slot="start">
             <ion-img src={{getRoomAvatar(room)}} ></ion-img>
           </ion-avatar>
