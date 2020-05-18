@@ -1,0 +1,75 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/tabs/profile" text="Profile"></ion-back-button>
+        </ion-buttons>
+        <ion-buttons slot="end" class="ion-padding-end" (click)="logout()">
+            <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+        </ion-buttons>
+        <ion-title>Settings</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+    <ion-item-group>
+        <ion-item-divider>
+            <ion-label>Notifications</ion-label>
+        </ion-item-divider>
+
+        <ion-item>
+            <ion-label>Flexes</ion-label>
+            <ion-toggle [(ngModel)]="flexes"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            <ion-label>Messages</ion-label>
+            <ion-toggle [(ngModel)]="messages"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            <ion-label>Event updates</ion-label>
+            <ion-toggle [(ngModel)]="eventUpdates"></ion-toggle>
+        </ion-item>
+
+    </ion-item-group>
+
+    <ion-item-group>
+        <ion-item-divider>
+            <ion-label>Connect with us</ion-label>
+        </ion-item-divider>
+
+        <ion-item>
+            <ion-label>We are on Instagram</ion-label>
+            <ion-icon slot="end" name="logo-instagram"></ion-icon>
+        </ion-item>
+        <ion-item>
+            <ion-label>We are on Facebook</ion-label>
+            <ion-icon slot="end" name="logo-facebook"></ion-icon>
+        </ion-item>
+        <ion-item>
+            <ion-label>We are on Reddit</ion-label>
+            <ion-icon slot="end" name="logo-reddit"></ion-icon>
+        </ion-item>
+    </ion-item-group>
+
+    <ion-item-group>
+        <ion-item-divider>
+            <ion-label>Legal stuff</ion-label>
+        </ion-item-divider>
+
+        <ion-item (click)="openBrowser('https://ionicframework.com')">
+            <ion-label>Privacy Policy</ion-label>
+            <ion-icon slot="end" name="document-text-outline"></ion-icon>
+        </ion-item>
+        <ion-item (click)="openBrowser('https://ionicframework.com')">
+            <ion-label>Terms of Use</ion-label>
+            <ion-icon slot="end" name="document-text-outline"></ion-icon>
+        </ion-item>
+    </ion-item-group>
+
+    <ion-button expand="block" (click)="showAppPreferences()">Preferences</ion-button>
+
+    <div *ngIf="appVersion" class="ion-text-center ion-margin-top">
+        <b>{{appVersion}}</b>
+    </div>
+
+</ion-content>
