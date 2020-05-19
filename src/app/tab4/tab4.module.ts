@@ -10,6 +10,9 @@ import { UserProfileEditComponent } from './components/user-profile-edit/user-pr
 import { AppPreferences } from '@ionic-native/app-preferences/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
+import { SettingsComponent } from './components/settings/settings.component';
+import { AppLauncher } from '@ionic-native/app-launcher/ngx';
+
 
 @NgModule({
   imports: [
@@ -19,8 +22,8 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
     Tab4PageRoutingModule,
     SharedModule
   ],
-  declarations: [Tab4Page, UserProfileComponent, UserProfileEditComponent],
+  declarations: [Tab4Page, UserProfileComponent, UserProfileEditComponent, SettingsComponent],
   entryComponents: [UserProfileEditComponent],
-  providers: [AppPreferences, InAppBrowser, AppVersion]
+  providers: [AppPreferences, InAppBrowser, AppVersion, AppLauncher]
 })
 export class Tab4PageModule {}
