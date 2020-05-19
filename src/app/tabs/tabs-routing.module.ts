@@ -32,7 +32,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/tabs/chat',
+    redirectTo: '/tabs/profile',
     pathMatch: 'full'
   }
 ];

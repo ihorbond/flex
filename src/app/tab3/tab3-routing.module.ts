@@ -9,7 +9,7 @@ const routes: Routes = [
     component: Tab3Page,
   },
   {
-    path: 'rooms/:id',
+    path: ':id',
     component: ChatRoomComponent
   }
 ];
