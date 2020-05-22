@@ -19,6 +19,11 @@
     <param name="onload" value="true"/>
   </feature>
 
+  <feature name="FirebasePlugin">
+    <param name="android-package" value="org.apache.cordova.firebase.FirebasePlugin"/>
+    <param name="onload" value="true"/>
+  </feature>
+
   <feature name="InAppBrowser">
     <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser"/>
   </feature>

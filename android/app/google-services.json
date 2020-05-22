@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "669812144624",
+    "firebase_url": "https://flex-6e95e.firebaseio.com",
+    "project_id": "flex-6e95e",
+    "storage_bucket": "flex-6e95e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669812144624:android:a38096032881daf2e30535",
+        "android_client_info": {
+          "package_name": "com.flexeventsapp.flex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669812144624-h7ah6cbmqadedk2lcrjvvdfj0a6pqrpn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrrYfBGFDFQ7LgBIveLLBP9XcyHn3Z8A0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669812144624-h7ah6cbmqadedk2lcrjvvdfj0a6pqrpn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

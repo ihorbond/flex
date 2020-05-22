@@ -24,16 +24,16 @@ export class Tab5Page implements OnInit {
 
   ngOnInit() {
 
-    // this._fcmService.getToken();
+    this._fcmService.getToken();
 
-    // this._fcmService.listenToNotifications().subscribe(
-    //   async msg => {
-    //     const toast = await this._toastController.create({
-    //       message: msg.body,
-    //       duration: 3000
-    //     });
-    //     toast.present();
-    //   });
+    this._fcmService.listenToNotifications().subscribe(
+      async msg => {
+        const toast = await this._toastController.create({
+          message: msg.body,
+          duration: 3000
+        });
+        toast.present();
+      });
   //   PushNotifications.requestPermission().then( result => {
   //     if (result.granted) {
   //       // Register with Apple / Google to receive push via APNS/FCM
