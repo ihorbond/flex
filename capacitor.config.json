@@ -1,5 +1,5 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "com.flexeventsapp.flex",
   "appName": "flex",
   "bundledWebRuntime": false,
   "npmClient": "npm",

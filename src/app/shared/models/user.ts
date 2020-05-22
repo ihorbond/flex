@@ -13,9 +13,15 @@ export interface User {
     avatar: UserPhoto;
     events: string[];
     chatRooms: DocumentReference<ChatRoom>[];
+    devices: UserDevice[];
 }
 
 export interface UserPhoto {
     name: string;
     url: string;
+}
+
+export interface UserDevice {
+    id?: string;
+    token?: string;
 }
