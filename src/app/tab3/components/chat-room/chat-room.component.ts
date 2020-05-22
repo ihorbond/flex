@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit, Query } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { DbService } from 'src/app/shared/services/db.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { first, map, tap, delay } from 'rxjs/operators';
 import { ChatRoom } from '../../models/chat-room';
 import { environment as env } from 'src/environments/environment';
@@ -9,6 +9,7 @@ import { IonTextarea, IonContent } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { firestore } from 'firebase/app';
 import { Transaction } from '@firebase/firestore-types';
+import { Notification } from 'src/app/shared/models/notification';
 
 
 @Component({
@@ -17,14 +18,14 @@ import { Transaction } from '@firebase/firestore-types';
   styleUrls: ['./chat-room.component.scss'],
 })
 export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild(IonTextarea) newMsgTextArea: IonTextarea;
   @ViewChild(IonContent) ionContent: IonContent;
 
   public messages: ChatRoomMessage[] = [];
   public isLoadingOlderMessages: boolean;
+  public room: ChatRoom = null;
+  public roomTitle: string;
   public readonly currUserId = env.testUserId;
 
-  private room: ChatRoom = null;
   private messagesSub: Subscription;
   private scrollElement: HTMLElement;
   private lastDocRef: ChatRoomMessage = null;
@@ -34,21 +35,24 @@ export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private _dbService: DbService,
-    private _router: Router
+    private _router: Router,
+    private _activatedRoute: ActivatedRoute
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     //this.currUserId = localStorage.getItem('userId');
-    this.room = this._router.getCurrentNavigation().extras.state as ChatRoom;
+    this.room = await this.getRoom();
+    console.log("room", this.room);
     this.otherUserId = Object.keys(this.room.users).find(key => key !== this.currUserId);
-    console.log("room from router's state ", this.room);
+    this.roomTitle = this.getRoomTitle();
     this.updateRoom();
     this.subscribeToMessages();
   }
 
   ngAfterViewInit() {
     this.ionContent.getScrollElement().then(el => this.scrollElement = el);
-    this.toggleScrollEvents(this.room.msgCount > this.msgFetchLimit);
+    this.toggleScrollEvents(true);
+    //this.toggleScrollEvents(this.room.msgCount > this.msgFetchLimit);
   }
 
   ngOnDestroy() {
@@ -60,17 +64,7 @@ export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
       .update({ [`users.${this.otherUserId}.isInTheRoom`]: false });
   }
 
-  private updateRoom(): void {
-    const currUser = this.room.users[this.currUserId];
-    if (currUser.unreadMsgCount > 0) {
-      currUser.unreadMsgCount = 0;
-    }
-    currUser.isInTheRoom = true;
-    const path = `${env.collections.chatRooms}/${this.room.id}`;
-    this._dbService.updateAt(path, this.room).catch(console.error);
-  }
-
-  public get roomTitle(): string {
+  public getRoomTitle(): string {
     return "Chat with " + this.room.users[this.otherUserId].name;
   }
 
@@ -98,20 +92,18 @@ export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log("selectImage");
   }
 
-  public async sendMessage(): Promise<void> {
+  public async sendMessage(newMsgTextArea: IonTextarea): Promise<void> {
+    const msgText = newMsgTextArea.value.substring(0,30);
     const roomDocRef = this._dbService.fs.collection(env.collections.chatRooms).doc(this.room.id).ref;
-    const newMsgId = this._dbService.fs.createId();
-    const newMsDocgRef = this._dbService.fs.collection(this.messagesPath).doc(newMsgId).ref;
     const increment = firestore.FieldValue.increment(1);
 
-    const newMsg: ChatRoomMessage = {
-      id: newMsgId,
-      authorId: this.currUserId,
-      text: this.newMsgTextArea.value.substring(0,30),
-      timestamp: firestore.Timestamp.fromDate(new Date())
-    };
-
-    this.newMsgTextArea.value = null;
+    const newMsg = this.createNewMessage(msgText);
+    const newMsDocgRef = this._dbService.fs.collection(this.messagesPath).doc(newMsg.id).ref;
+    
+    const newNotification = this.createNewNotification(msgText);
+    const newNotificationRef = this._dbService.fs.collection(`${env.collections.users}/${this.otherUserId}/Notifications`).doc(newNotification.id).ref;
+    
+    newMsgTextArea.value = null;
 
     this._dbService.fs.firestore.runTransaction((transaction: Transaction) => {
       return transaction.get(roomDocRef).then(doc => {
@@ -124,6 +116,7 @@ export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         transaction.update(roomDocRef, updateData);
         transaction.set(newMsDocgRef, newMsg);
+        transaction.set(newNotificationRef, newNotification);
         //return {...room, ...updateData};
       }).catch(console.error);
     });
@@ -132,6 +125,49 @@ export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public getAvatar(msg: ChatRoomMessage): string {
     return this.room.users[msg.authorId].avatar;
+  }
+
+  private createNewNotification(msgText: string): Notification {
+    const newNotificationId = this._dbService.fs.createId();
+    const currUser = this.room.users[this.currUserId];
+    return <Notification> {
+      id: newNotificationId,
+      title: `New message from ${currUser.name}`,
+      body: msgText,
+      icon: currUser.avatar,
+      timestamp: firestore.Timestamp.fromDate(new Date()),
+      navUrl: this._router.url
+    };
+  }
+
+  private createNewMessage(msgText: string): ChatRoomMessage {
+    const newMsgId = this._dbService.fs.createId();
+    return <ChatRoomMessage>{
+      id: newMsgId,
+      authorId: this.currUserId,
+      text: msgText,
+      timestamp: firestore.Timestamp.fromDate(new Date())
+    };
+  }
+
+  private updateRoom(): void {
+    const currUser = this.room.users[this.currUserId];
+    if (currUser.unreadMsgCount > 0) {
+      currUser.unreadMsgCount = 0;
+    }
+    currUser.isInTheRoom = true;
+    const path = `${env.collections.chatRooms}/${this.room.id}`;
+    this._dbService.updateAt(path, this.room).catch(console.error);
+  }
+
+  private async getRoom(): Promise<ChatRoom> {
+    let room = this._router.getCurrentNavigation().extras.state as ChatRoom;
+    if(!room) {
+      const roomId = this._activatedRoute.snapshot.paramMap.get('id');
+      this.room = await this._dbService.doc$(`${env.collections.chatRooms}/${roomId}`).toPromise();
+    }
+
+    return room;
   }
 
   private loadMoreMessages(): void {

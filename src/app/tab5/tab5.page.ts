@@ -4,7 +4,7 @@ import { DbService } from '../shared/services/db.service';
 import { environment as env } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
 import { Timestamp } from '@firebase/firestore-types';
-import { Notification } from './models/notification';
+import { Notification } from '../shared/models/notification';
 import * as moment from 'moment';
 
 const formats = {
