@@ -1,60 +1,78 @@
-import { Component, OnInit } from '@angular/core';
-import { FcmService } from '../shared/services/fcm.service';
-import { tap } from 'rxjs/operators';
-import { ToastController } from '@ionic/angular';
-// import {
-//   Plugins,
-//   PushNotification,
-//   PushNotificationToken,
-//   PushNotificationActionPerformed } from '@capacitor/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { delay } from 'rxjs/operators';
+import { DbService } from '../shared/services/db.service';
+import { environment as env } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
+import { Timestamp } from '@firebase/firestore-types';
+import { Notification } from './models/notification';
+import * as moment from 'moment';
 
-// const { PushNotifications } = Plugins;
+const formats = {
+  sameDay: 'h:mm A',
+  lastDay: '[Yesterday]',
+  lastWeek: 'dddd',
+  sameElse: 'MM/DD/YY'
+}
 
 @Component({
   selector: 'app-tab5',
   templateUrl: './tab5.page.html',
   styleUrls: ['./tab5.page.scss'],
 })
-export class Tab5Page implements OnInit {
+export class Tab5Page implements OnInit, OnDestroy {
+
+  public notifications: Notification[] = null;
+
+  private notificationFetchLimit: number = 10;
+  private notificationSub: Subscription;
+  private userId: string = env.testUserId;
 
   constructor(
-    private _fcmService: FcmService,
-    private _toastController: ToastController
+    private _dbService: DbService
   ) { }
 
   ngOnInit() {
+    this.subscribeToNotifications();
+  }
 
-    this._fcmService.getToken();
+  ngOnDestroy(): void {
+    this.notificationSub.unsubscribe();
+  }
 
-    this._fcmService.listenToNotifications().subscribe(
-      async msg => {
-        const toast = await this._toastController.create({
-          message: msg.body,
-          duration: 3000
-        });
-        toast.present();
-      });
-  //   PushNotifications.requestPermission().then( result => {
-  //     if (result.granted) {
-  //       // Register with Apple / Google to receive push via APNS/FCM
-  //       PushNotifications.register();
-  //     } else {
-  //       // Show some error
-  //     }
-  //   });
+  public delete(idx: number): void {
+    const notification = this.notifications[idx];
+    console.log("deleting notification", notification);
+    this.notifications.splice(idx, 1);
+    this._dbService.delete(`${env.collections.users}/${this.userId}/notifications/${notification.id}`);
+  }
 
-  //   // On success, we should be able to receive notifications
-  //   PushNotifications.addListener('registration',
-  //     (token: PushNotificationToken) => {
-  //       alert('Push registration success, token: ' + token.value);
-  //     }
-  //   );
+  public timeToNow(timestamp: Timestamp): string {
+    return moment(timestamp.toDate()).calendar(null, formats);
+  }
 
-  //   PushNotifications.addListener('registrationError',
-  //   (error: any) => {
-  //     alert('Error on registration: ' + JSON.stringify(error));
-  //   }
-  // );
+  public loadMore(e: any): void {
+    this.notificationFetchLimit += 10;
+    this.subscribeToNotifications(e);
+  }
+
+  private subscribeToNotifications(e?: any): void {
+    if (this.notificationSub)
+      this.notificationSub.unsubscribe();
+
+    this.notificationSub = this._dbService.collection$<Notification>(
+      `${env.collections.users}/${this.userId}/notifications`,
+      ref => ref.orderBy('timestamp', 'desc').limit(this.notificationFetchLimit))
+      .pipe(delay(1000))
+      .subscribe((notifications: Notification[]) => {
+        console.log(this.userId, notifications);
+        const prevCount = (this.notifications || []).length;
+        this.notifications = notifications;
+
+        if (e) {
+          e.target.complete();
+          e.target.disabled = prevCount === this.notifications.length;
+        }
+      }, console.error);
   }
 
 }

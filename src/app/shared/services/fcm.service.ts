@@ -17,13 +17,9 @@ export class FcmService {
   ) { }
 
     public async getToken(): Promise<UserDevice> {
-      let token: string;
-      if(this._platform.is('android')) {
-        token = await this._firebaseNative.getToken();
-      }
+      const token: string = await this._firebaseNative.getToken();
       
       if(this._platform.is("ios")) {
-        token = await this._firebaseNative.getToken();
         await this._firebaseNative.grantPermission();
       }
 
