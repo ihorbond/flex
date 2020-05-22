@@ -43,7 +43,7 @@ export class Tab5Page implements OnInit, OnDestroy {
     const notification = this.notifications[idx];
     console.log("deleting notification", notification);
     this.notifications.splice(idx, 1);
-    this._dbService.delete(`${env.collections.users}/${this.userId}/notifications/${notification.id}`);
+    this._dbService.delete(`${env.collections.users}/${this.userId}/Notifications/${notification.id}`);
   }
 
   public timeToNow(timestamp: Timestamp): string {
@@ -60,7 +60,7 @@ export class Tab5Page implements OnInit, OnDestroy {
       this.notificationSub.unsubscribe();
 
     this.notificationSub = this._dbService.collection$<Notification>(
-      `${env.collections.users}/${this.userId}/notifications`,
+      `${env.collections.users}/${this.userId}/Notifications`,
       ref => ref.orderBy('timestamp', 'desc').limit(this.notificationFetchLimit))
       .pipe(delay(1000))
       .subscribe((notifications: Notification[]) => {

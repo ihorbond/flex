@@ -4,7 +4,7 @@ export interface Notification {
     id?: string;
     title: string;
     body: string;
-    imageUrl: string;
+    icon: string;
     navUrl: string;
     timestamp: Timestamp;
 }
