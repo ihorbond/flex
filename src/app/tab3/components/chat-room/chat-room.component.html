@@ -16,21 +16,23 @@
     <ion-spinner></ion-spinner>
   </div>
 
-  <ion-list>
-    <ion-card *ngFor="let m of messages">
-      <ion-card-content>
-        <ion-item>
-          <ion-thumbnail slot="{{m.authorId === currUserId ? 'start':'end'}}">
-            <ion-img src={{getAvatar(m)}}></ion-img>
-          </ion-thumbnail>
-          <ion-label>
-            <b>{{m.timestamp.toDate() | date:'short'}}</b>
-            <p>{{m.text}}</p>
-          </ion-label>
-        </ion-item>
-      </ion-card-content>
-    </ion-card>
-  </ion-list>
+  <div *ngIf="room;else loading">
+    <ion-list>
+      <ion-card *ngFor="let m of messages">
+        <ion-card-content>
+          <ion-item>
+            <ion-thumbnail slot="{{m.authorId === currUserId ? 'start':'end'}}">
+              <ion-img src={{getAvatar(m)}}></ion-img>
+            </ion-thumbnail>
+            <ion-label>
+              <b>{{m.timestamp.toDate() | date:'short'}}</b>
+              <p>{{m.text}}</p>
+            </ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+  </div>
 
 </ion-content>
 
@@ -46,10 +48,14 @@
     </ion-textarea>
 
     <ion-buttons slot="end">
-      <ion-button [disabled]="!newMsg.value" (click)='sendMessage()'>
+      <ion-button [disabled]="!newMsg.value" (click)='sendMessage(newMsg)'>
         <ion-icon slot="icon-only" name="send-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
 
   </ion-toolbar>
 </ion-footer>
+
+<ng-template #loading>
+  <ion-progress-bar type="indeterminate"></ion-progress-bar>
+</ng-template>
