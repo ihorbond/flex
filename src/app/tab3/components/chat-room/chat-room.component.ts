@@ -24,7 +24,7 @@ export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
   public isLoadingOlderMessages: boolean;
   public room: ChatRoom = null;
   public roomTitle: string;
-  public readonly currUserId = env.testUserId;
+  public currUserId = env.testUserId;
 
   private messagesSub: Subscription;
   private scrollElement: HTMLElement;
@@ -40,7 +40,7 @@ export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   async ngOnInit() {
-    //this.currUserId = localStorage.getItem('userId');
+    this.currUserId = localStorage.getItem('userId') || env.testUserId;
     this.room = await this.getRoom();
     console.log("room", this.room);
     this.otherUserId = Object.keys(this.room.users).find(key => key !== this.currUserId);

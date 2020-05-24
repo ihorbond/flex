@@ -10,17 +10,21 @@ exports.newNotification = functions.firestore
         const user = snapshot.ref.parent.parent;
         const data = snapshot.data();
         
-        const payload = {
+        const payload: admin.messaging.MessagingPayload = {
             notification: {
                 title: data?.title,
                 body: data?.body,
                 icon: data?.icon
-            }
+            },
+            data: {
+                notification_foreground: 'true',
+                notification_title: data?.title,
+                notification_body: data?.body,
+                notification_icon: data?.icon
+              }
         };
 
-        console.log(user, payload);
-
-        const devices = await user?.collection('devices').get();
+        const devices = await user?.collection('Devices').get();
         const tokens: string[] = [];
         devices?.forEach(d => tokens.push(d.data().token));
 

@@ -23,7 +23,7 @@ const formats = {
 })
 export class Tab3Page implements OnInit, OnDestroy {
   public chatRooms: ChatRoom[] = null;
-  public userId = env.testUserId;
+  public userId: string;
 
   private user: User = null;
   private chatRoomFetchLimit: number = 10;
@@ -34,7 +34,7 @@ export class Tab3Page implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    //var userId = localStorage.getItem('userId');
+    this.userId = localStorage.getItem('userId') || env.testUserId;
     this.loadData();
   }
 

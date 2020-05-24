@@ -23,5 +23,9 @@ export interface UserPhoto {
 
 export interface UserDevice {
     id?: string;
-    token?: string;
+    manufacturer: string,
+    model: string,
+    version: string,
+    uuid: string,
+    token: string;
 }
