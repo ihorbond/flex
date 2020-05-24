@@ -8,6 +8,7 @@ import { CollectionReference, Query } from '@firebase/firestore-types';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { first, delay } from 'rxjs/operators';
+import { AuthService } from '../authentication/services/auth.service';
 
 const formats = {
   sameDay: 'h:mm A',
@@ -30,11 +31,12 @@ export class Tab3Page implements OnInit, OnDestroy {
   private chatRoomsSub: Subscription = null;
 
   constructor(
-    private _dbService: DbService
+    private _dbService: DbService,
+    private _authService: AuthService
   ) { }
 
   ngOnInit() {
-    this.userId = localStorage.getItem('userId') || env.testUserId;
+    this.userId = this._authService.currentUser?.id || env.testUserId;
     this.loadData();
   }
 

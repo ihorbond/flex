@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { firestore } from 'firebase/app';
 import { Transaction } from '@firebase/firestore-types';
 import { Notification } from 'src/app/shared/models/notification';
+import { AuthService } from 'src/app/authentication/services/auth.service';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
   public isLoadingOlderMessages: boolean;
   public room: ChatRoom = null;
   public roomTitle: string;
-  public currUserId = env.testUserId;
+  public currUserId: string;
 
   private messagesSub: Subscription;
   private scrollElement: HTMLElement;
@@ -36,11 +37,12 @@ export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _dbService: DbService,
     private _router: Router,
-    private _activatedRoute: ActivatedRoute
+    private _activatedRoute: ActivatedRoute,
+    private _authService: AuthService
   ) { }
 
   async ngOnInit() {
-    this.currUserId = localStorage.getItem('userId') || env.testUserId;
+    this.currUserId = this._authService.currentUser?.id || env.testUserId;
     this.room = await this.getRoom();
     console.log("room", this.room);
     this.otherUserId = Object.keys(this.room.users).find(key => key !== this.currUserId);

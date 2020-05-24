@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { Timestamp } from '@firebase/firestore-types';
 import { Notification } from '../shared/models/notification';
 import * as moment from 'moment';
+import { AuthService } from '../authentication/services/auth.service';
 
 const formats = {
   sameDay: 'h:mm A',
@@ -25,13 +26,15 @@ export class Tab5Page implements OnInit, OnDestroy {
 
   private notificationFetchLimit: number = 10;
   private notificationSub: Subscription;
-  private userId: string = env.testUserId;
+  private userId: string;
 
   constructor(
-    private _dbService: DbService
+    private _dbService: DbService,
+    private _authService: AuthService
   ) { }
 
   ngOnInit() {
+    this.userId = this._authService.currentUser?.id || env.testUserId;
     this.subscribeToNotifications();
   }
 

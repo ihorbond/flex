@@ -6,6 +6,7 @@ import { DbService } from 'src/app/shared/services/db.service';
 import { cloneDeep } from 'lodash';
 import { Subscription } from 'rxjs';
 import { environment as env } from 'src/environments/environment';
+import { AuthService } from 'src/app/authentication/services/auth.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -22,11 +23,13 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private _modalController: ModalController,
-    private _dbService: DbService
+    private _dbService: DbService,
+    private _authService: AuthService
   ) { }
 
   ngOnInit() {
-    this.subs.push(this.loadData(env.testUserId));
+    const userId = this._authService.currentUser?.id || env.testUserId;
+    this.subs.push(this.loadData(userId));
   }
 
   ngOnDestroy(): void {

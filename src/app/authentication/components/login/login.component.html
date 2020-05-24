@@ -7,15 +7,17 @@
 </ion-header>
 
 <ion-content padding>
-  
+
   <form [formGroup]="loginForm" (ngSubmit)="login($event)">
     <ion-item>
-      <ion-input formControlName="username" placeholder="Email"></ion-input>
-      <ion-label color="danger" *ngIf="loginForm.get('username').dirty && loginForm.get('username').hasError('email')">Email is not valid</ion-label>
+      <ion-input formControlName="username" placeholder="username"></ion-input>
+      <ion-label color="danger" *ngIf="loginForm.get('username').dirty && loginForm.get('username').hasError('email')">
+        Email is not valid</ion-label>
     </ion-item>
     <ion-item>
-      <ion-input formControlName="pass" placeholder="Pass"></ion-input>
-      <ion-label color="danger" *ngIf="loginForm.get('pass').dirty && loginForm.get('pass').hasError('minlength')">Minimum 6 characters</ion-label>
+      <ion-input type="password" formControlName="pass" placeholder="password"></ion-input>
+      <ion-label color="danger" *ngIf="loginForm.get('pass').dirty && loginForm.get('pass').hasError('minlength')">
+        Minimum 6 characters</ion-label>
     </ion-item>
     <ion-item>
       <ion-label>Remember me</ion-label>
@@ -23,5 +25,12 @@
     </ion-item>
     <ion-button [disabled]="loginForm.invalid" expand="full" (click)="login($event)">Login</ion-button>
   </form>
-  
+
+  <div class="ion-text-center ion-padding">
+    <b>OR</b>
+  </div>
+
+  <ion-button expand="full" (click)="signIn('Google')">Sign in with Google</ion-button>
+  <!-- <ion-button expand="full" (click)="signIn('Facebook')">Sign in with Facebook</ion-button> -->
+
 </ion-content>
