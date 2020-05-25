@@ -9,7 +9,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "jetifier",
+    "cpmanifest": "cp android/app/src/main/AndroidManifest.xml android/capacitor-cordova-android-plugins/build/intermediates/merged_manifests/debug/"
   },
   "private": true,
   "dependencies": {
@@ -36,6 +38,7 @@
     "@ionic-native/status-bar": "^5.26.0",
     "@ionic/angular": "^5.1.1",
     "@types/lodash": "^4.14.152",
+    "capacitor-firebase-auth": "^0.3.1",
     "cordova-plugin-androidx": "^1.0.2",
     "cordova-plugin-androidx-adapter": "^1.1.1",
     "cordova-plugin-app-launcher": "^0.4.0",
@@ -48,6 +51,7 @@
     "cordova-plugin-photo-library": "^2.3.1",
     "core-js": "^2.5.4",
     "firebase": "^7.14.5",
+    "jetifier": "^1.6.5",
     "lodash": "^4.17.15",
     "moment": "^2.26.0",
     "rxjs": "~6.5.1",

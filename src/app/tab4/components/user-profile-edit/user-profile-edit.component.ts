@@ -5,6 +5,7 @@ import { DbService } from 'src/app/shared/services/db.service';
 import { finalize } from 'rxjs/operators';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { Observable } from 'rxjs';
+import { firestore } from 'firebase/app';
 
 //TODO: give photo deletion tasks to background worker
 
@@ -26,7 +27,6 @@ export class UserProfileEditComponent implements OnInit {
     private _storageService: StorageService,
   ) { }
 
-
   ngOnInit() {}
 
   public cancel(): void {
@@ -37,6 +37,7 @@ export class UserProfileEditComponent implements OnInit {
   }
 
   public async save(): Promise<void> {
+    this.user.updatedAt = firestore.Timestamp.fromDate(new Date());
     await this._dbService.updateAt(`Users/${this.user.id}`, this.user).then(_ => {
       this._modalController.dismiss();
     }).catch(console.error);

@@ -30,6 +30,10 @@
   </div>
 
   <div *ngIf="user">
-    <ion-textarea [(ngModel)]="user.description"></ion-textarea>
+    <ion-item>
+      <ion-label position="stacked">Description</ion-label>
+      <ion-textarea autogrow autofocus [(ngModel)]="user.description"></ion-textarea>
+    </ion-item>
+    
   </div>
 </ion-content>

@@ -9,7 +9,7 @@ android {
 
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
-
+    implementation project(':capacitor-firebase-auth')
     implementation "com.google.android.gms:play-services-tagmanager:17.0.0"
     implementation "com.google.android.gms:play-services-auth:18.0.0"
     implementation "com.google.firebase:firebase-analytics:17.4.0"

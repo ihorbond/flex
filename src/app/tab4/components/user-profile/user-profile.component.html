@@ -5,7 +5,7 @@
     </ion-slide>
   </ion-slides>
   <h1>{{user.firstName}} {{user.lastName}}</h1>
-  <h5>{{user.dob | toAge}}</h5>
+  <h5>{{user.dob?.toDate() | toAge}}</h5>
   <span>{{user.description}}</span>
   <br/>
   <ion-button class="ion-margin-top" expand="block" (click)="edit()">Edit Profile</ion-button>

@@ -39,11 +39,10 @@ export class FirebaseNativeService {
       this._dbService.collection$<UserDevice>(`Users/${this.userId}/Devices`, ref => ref.where('token', '==', token))
       .pipe(first())
       .subscribe(tokens => {
-        const duplicate = tokens.some(x => x.token === token);
-        console.log("Looking for duplicates", this.userId, tokens, duplicate);
-        if (!duplicate) {
+        const isDuplicate = tokens.some(x => x.token === token);
+        console.log("Looking for duplicates", this.userId, tokens, isDuplicate);
+        if (!isDuplicate)
           return this.saveToFirestore(token);
-        }
       });
     }
 

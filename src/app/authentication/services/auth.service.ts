@@ -2,12 +2,12 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { UserAuthInfo } from '../models/user-auth-info';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, first } from 'rxjs/operators';
 import { DbService } from 'src/app/shared/services/db.service';
 import { User } from 'src/app/shared/models/user';
 import { of, Subscription } from 'rxjs';
 import { auth, firestore } from 'firebase/app';
-
+import { cfaSignInGoogle, cfaSignInFacebook } from 'capacitor-firebase-auth/alternative';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,8 @@ export class AuthService implements OnDestroy {
   constructor(
     private _dbService: DbService,
     private _fAuth: AngularFireAuth,
-    private _router: Router) {
+    private _router: Router
+  ) {
     this.userSub = _fAuth.authState.pipe(
       switchMap(user => user ? this._dbService.doc$(`Users/${user.uid}`) : of(null))
     ).subscribe(user => this.currentUser = user);
@@ -41,33 +42,38 @@ export class AuthService implements OnDestroy {
 
   public async login(authInfo: UserAuthInfo): Promise<auth.UserCredential> {
     const credential = await this._fAuth.signInWithEmailAndPassword(authInfo.username, authInfo.pass);
+    console.log("login credential", credential);
     await this.updateUser(credential.user.uid);
     return credential;
   }
 
   public logout(): void {
-    this._fAuth.signOut().then(_ => this._router.parseUrl('/auth/login'));
+    this._fAuth.signOut().then(_ => this._router.navigate(['auth','login']));
   }
 
-  public signInWithThirdPartyProvider(providerId: string): Promise<auth.UserCredential> {
-    let provider: auth.AuthProvider;
-    switch(providerId) {
-      case "Facebook": provider = new auth.FacebookAuthProvider(); break;
-      case "Google": provider = new auth.GoogleAuthProvider(); break;
+  public signInWithThirdPartyProvider(providerId: string, onSuccess: () => void, onError: () => void): void {
+    let provider;
+    switch (providerId) {
+      case "Google": provider = cfaSignInGoogle; break;
+      case "Facebook": provider = cfaSignInFacebook; break;
+      default: return;
     }
-    return this.signInWithPopup(provider);
-  }
 
-  private async signInWithPopup(provider: auth.AuthProvider): Promise<auth.UserCredential> {
-    const credential = await this._fAuth.signInWithPopup(provider);
-    console.log("credential", credential);
-    if(credential) {
-       credential.additionalUserInfo.isNewUser 
-        ? await this.createUser(credential.user, credential.additionalUserInfo.providerId) 
-        : await this.updateUser(credential.user.uid)
-        return credential;
-    }
-    return Promise.reject("Invalid credentials");
+    provider().pipe(first()).subscribe(
+      async ({ userCredential, result }) => {
+        console.log("credential", userCredential, "result", result);
+        if (userCredential) {
+          userCredential.additionalUserInfo?.isNewUser
+            ? await this.createUser(userCredential.user, result.providerId)
+            : await this.updateUser(userCredential.user.uid)
+          onSuccess();
+        } else {
+          onError();
+        }
+      }, err => {
+        console.error(err);
+        onError();
+      });
   }
 
   private updateUser(id: string): Promise<User> {
