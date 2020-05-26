@@ -8,6 +8,7 @@ import { CollectionReference, Query } from '@firebase/firestore-types';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { first, delay } from 'rxjs/operators';
+import { AuthService } from '../authentication/services/auth.service';
 
 const formats = {
   sameDay: 'h:mm A',
@@ -30,11 +31,12 @@ export class Tab3Page implements OnInit, OnDestroy {
   private chatRoomsSub: Subscription = null;
 
   constructor(
-    private _dbService: DbService
+    private _dbService: DbService,
+    private _authService: AuthService
   ) { }
 
   ngOnInit() {
-    this.userId = localStorage.getItem('userId') || env.testUserId;
+    this.userId = this._authService.currentUser?.id || env.testUserId;
     this.loadData();
   }
 
@@ -75,17 +77,17 @@ export class Tab3Page implements OnInit, OnDestroy {
     const newRoom: ChatRoom = {
       createdAt: firestore.Timestamp.fromDate(date),
       msgCount: 0,
-      userIds: [this.userId, '776AmtwkOnmZfgNSPFNw'],
+      userIds: ['5Zkuua9LmPRutSAkXRQTlySyNyT2', 'Hk6MWJHIAUam9rV5CYffdjw7eA43'],
       users: {
-        [this.userId]: {
-          name: this.user.firstName,
-          avatar: this.user.avatar.url,
+        ['5Zkuua9LmPRutSAkXRQTlySyNyT2']: {
+          name: 'Ihor',
+          avatar: 'https://lh3.googleusercontent.com/a-/AOh14Gh-XIn9_ruMB-Pv8d8kgscstkjEIMz1Zmsk4oamHg',
           unreadMsgCount: 0,
           isInTheRoom: false
         },
-        '776AmtwkOnmZfgNSPFNw': {
-          name: 'Vivi',
-          avatar: 'https://firebasestorage.googleapis.com/v0/b/flex-6e95e.appspot.com/o/images%2Fusers%2F776AmtwkOnmZfgNSPFNw%2Fvivi.jpg?alt=media&token=cd3e6ce5-854f-449b-9828-9071666ebc4cg',
+        'Hk6MWJHIAUam9rV5CYffdjw7eA43': {
+          name: 'Oleh',
+          avatar: 'https://firebasestorage.googleapis.com/v0/b/flex-6e95e.appspot.com/o/images%2Fusers%2FHk6MWJHIAUam9rV5CYffdjw7eA43%2Foleh.jpg?alt=media&token=a6295321-e315-4b41-bcbb-dfc2dc5e69ca',
           unreadMsgCount: 0,
           isInTheRoom: false
         }

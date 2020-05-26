@@ -7,20 +7,23 @@ import { UserDevice } from '../models/user';
 import { Observable } from 'rxjs/internal/Observable';
 import { Device } from '@ionic-native/device/ngx';
 import { first } from 'rxjs/operators';
+import { AuthService } from 'src/app/authentication/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseNativeService {
 
-  private userId = localStorage.getItem('userId') || env.testUserId;
+  private userId: string;
 
   constructor(
     private _firebaseNative: FirebaseX,
     private _dbService: DbService,
     private _platform: Platform,
     private _device: Device,
+    private _authService: AuthService
   ) {
+      this.userId = this._authService.currentUser?.id || env.testUserId;
     // this._firebaseNative.onTokenRefresh().subscribe(newToken => {
 
     //   this.saveToFirestore(newToken);
@@ -36,11 +39,10 @@ export class FirebaseNativeService {
       this._dbService.collection$<UserDevice>(`Users/${this.userId}/Devices`, ref => ref.where('token', '==', token))
       .pipe(first())
       .subscribe(tokens => {
-        const duplicate = tokens.some(x => x.token === token);
-        console.log("Looking for duplicates", this.userId, tokens, duplicate);
-        if (!duplicate) {
+        const isDuplicate = tokens.some(x => x.token === token);
+        console.log("Looking for duplicates", this.userId, tokens, isDuplicate);
+        if (!isDuplicate)
           return this.saveToFirestore(token);
-        }
       });
     }
 

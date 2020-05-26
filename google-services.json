@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "669812144624-1b5mt6q57h82b4enthte8uu7qhvn54o4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flexeventsapp.flex",
+            "certificate_hash": "af433b02cbcb044e23914aeb98684ceb0a699c0e"
+          }
+        },
+        {
           "client_id": "669812144624-h7ah6cbmqadedk2lcrjvvdfj0a6pqrpn.apps.googleusercontent.com",
           "client_type": 3
         }

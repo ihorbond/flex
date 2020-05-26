@@ -1,18 +1,20 @@
-import { DocumentReference } from '@firebase/firestore-types';
-import { ChatRoom } from 'src/app/tab3/models/chat-room';
+import { Timestamp } from '@firebase/firestore-types';
 
 export interface User {
-    id: string;
+    id?: string;
     firstName: string;
     lastName: string;
     description: string;
-    dob: Date;
-    lastSeenOn: Date;
-    registeredOn: Date;
+    dob: Timestamp;
+    email: string;
+    phoneNumber: string;
+    signInProviderId: string;
+    lastSignIn: Timestamp;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
     photos: UserPhoto[];
     avatar: UserPhoto;
     events: string[];
-    chatRooms: DocumentReference<ChatRoom>[];
     devices: UserDevice[];
 }
 
