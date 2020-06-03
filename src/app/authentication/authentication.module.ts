@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
+import { DemoComponent } from './components/demo/demo.component';
 
 const routes: Routes = [
   {
@@ -13,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: 'demo',
-    component: SplashScreenComponent
+    component: DemoComponent
   },
   {
     path: '**',
@@ -25,7 +25,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     LoginComponent,
-    SplashScreenComponent
+    DemoComponent
   ],
   imports: [
     ReactiveFormsModule,
