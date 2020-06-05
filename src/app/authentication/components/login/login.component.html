@@ -1,36 +1,43 @@
-<ion-header>
-  <ion-toolbar primary>
-    <ion-title>
-      Login
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
 
-<ion-content padding>
+    <div class="background">
+      <span class="flex-text">FLEX</span>
+      <div class="login-inputs">
+        <form [formGroup]="loginForm" (ngSubmit)="login($event)">
+          <ion-item-group >
+            <ion-item lines="none" class="ion-margin-bottom">
+              <ion-input formControlName="username" required autofocus placeholder="Email"></ion-input>
+              <!-- <ion-label color="danger" *ngIf="loginForm.get('username').dirty && loginForm.get('username').hasError('email')">
+                Email is not valid</ion-label> -->
+            </ion-item>
+            <ion-item>
+              <ion-input type="password" formControlName="pass" required placeholder="Password"></ion-input>
+              <!-- <ion-label color="danger" *ngIf="loginForm.get('pass').dirty && loginForm.get('pass').hasError('minlength')">
+                Minimum 6 characters</ion-label> -->
+            </ion-item>
+          </ion-item-group>
+          
+          <!-- <ion-item>
+            <ion-label>Remember me</ion-label>
+            <ion-toggle formControlName="rememberMe"></ion-toggle>
+          </ion-item> -->
+        </form>
+      </div>
 
-  <form [formGroup]="loginForm" (ngSubmit)="login($event)">
-    <ion-item>
-      <ion-input formControlName="username" placeholder="username"></ion-input>
-      <ion-label color="danger" *ngIf="loginForm.get('username').dirty && loginForm.get('username').hasError('email')">
-        Email is not valid</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-input type="password" formControlName="pass" placeholder="password"></ion-input>
-      <ion-label color="danger" *ngIf="loginForm.get('pass').dirty && loginForm.get('pass').hasError('minlength')">
-        Minimum 6 characters</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-label>Remember me</ion-label>
-      <ion-toggle formControlName="rememberMe"></ion-toggle>
-    </ion-item>
-    <ion-button [disabled]="loginForm.invalid" expand="full" (click)="login($event)">Login</ion-button>
-  </form>
+      <div class="login-btns">
+        <ion-button id="login-btn" size="small" [disabled]="loginForm.invalid" (click)="login($event)">Login</ion-button>
+        <div class="social-login-btns">
+          <ion-button id="google-btn" size="small" (click)="signIn('Google')">
+            <ion-icon name="logo-google" size="small" slot="start"></ion-icon>
+            Sign in with Google
+          </ion-button>
+          <ion-button color="tertiary" size="small" (click)="signIn('Facebook')">
+            <ion-icon name="logo-facebook" size="small" slot="start"></ion-icon>
+            Sign in with Facebook
+          </ion-button>
+        </div>
+      </div>
 
-  <div class="ion-text-center ion-padding">
-    <b>OR</b>
-  </div>
-
-  <ion-button expand="full" (click)="signIn('Google')">Sign in with Google</ion-button>
-  <!-- <ion-button expand="full" (click)="signIn('Facebook')">Sign in with Facebook</ion-button> -->
-
+    </div>
+    
 </ion-content>

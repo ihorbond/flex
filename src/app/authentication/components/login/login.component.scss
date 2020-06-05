@@ -1,0 +1,47 @@
+form {
+    height: 100%;
+}
+
+%flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-btns, .social-login-btns, .background {
+    @extend %flex-col;
+  }
+
+.flex-text {
+    display: block;
+    color: white;
+    font: 5em futura-bold, auto;
+    padding: 1.5em 0 0.3em 0;
+}
+
+.background {
+    align-items: center;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: linear-gradient(to top, #91937beb, #898d79e0, #7c8678f0, #687971d6, #687971d6, #3f5658), url('../../../../assets/img/splash4.jpg');
+  }
+
+  .login-inputs {
+      padding-bottom: 3em;
+      ion-item {
+          --border-radius: 5px;
+      }
+  }
+
+  .social-login-btns {
+      padding-top: 2em;
+  }
+
+  #google-btn {
+    --padding-start:0;
+  }
+
+  #login-btn {
+      --background: #03413d;
+      --border-radius: 15px;
+  }

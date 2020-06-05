@@ -1,0 +1,41 @@
+ion-slides {
+    height: 100%;
+  }
+
+  .swiper-slide {
+    display: block;
+  }
+
+  .background {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .flex-text {
+      display: block;
+      color: white;
+      font: 4em futura-bold, auto;
+      padding: 0.5em 0;
+      background-image: linear-gradient(to top,rgba(0,0,0,0),rgba(0,0,0,.1),rgba(0,0,0,.2),rgba(0,0,0,.3),rgba(0,0,0,.4));
+  }
+
+  .description {
+      color: white;
+      padding: 2em;
+      display: flex;
+      flex-direction: column-reverse;
+      background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .2), rgba(0, 0, 0, .4), rgba(0, 0, 0, .5), rgba(0, 0, 0, .7));
+  }
+
+  #footer {
+    ion-button {
+      width: 30%;
+    }
+    .description {
+      padding-top: 0.5em;
+    }
+  }
