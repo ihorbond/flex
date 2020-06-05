@@ -14,13 +14,6 @@ ion-slides {
     background-repeat: no-repeat;
     background-size: cover;
   }
-  
-  #getStarted {
-      position: relative;
-      top: 33%;
-      width: 30%;
-      align-self: center;
-  }
 
   .flex-text {
       display: block;
@@ -36,4 +29,13 @@ ion-slides {
       display: flex;
       flex-direction: column-reverse;
       background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .2), rgba(0, 0, 0, .4), rgba(0, 0, 0, .5), rgba(0, 0, 0, .7));
+  }
+
+  #footer {
+    ion-button {
+      width: 30%;
+    }
+    .description {
+      padding-top: 0.5em;
+    }
   }
