@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
     this.loginForm = this._fb.group({
       username: ['oleh@flexapp.com', [Validators.required, Validators.email]],
       pass: ['flexapp', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false]
+      rememberMe: [true]
     });
   }
 
@@ -39,8 +39,8 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  public async login(e: MouseEvent) {
-    console.log("login", this.loginForm);
+  public async login(e: any) {
+    //console.log("login", this.loginForm);
     if (this.loginForm.valid) {
       const loadingEl = await this.showLoading();
       this._authService.login({ ...this.loginForm.value })

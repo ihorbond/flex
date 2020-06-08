@@ -23,7 +23,7 @@ export class FirebaseNativeService {
     private _device: Device,
     private _authService: AuthService
   ) {
-      this.userId = this._authService.currentUser?.id || env.testUserId;
+      this.userId = this._authService.loggedInUser?.uid || env.testUserId;
     // this._firebaseNative.onTokenRefresh().subscribe(newToken => {
 
     //   this.saveToFirestore(newToken);

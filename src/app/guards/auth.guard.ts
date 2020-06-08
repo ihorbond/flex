@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../authentication/services/auth.service';
+import { first, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +17,14 @@ export class AuthGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      console.log("Auth guard user loggedin: ", this._authService.isLoggedIn);
-      //return true;
-      return this._authService.isLoggedIn 
-      ? true 
-      : this._router.parseUrl('/auth/login');
+      return this._authService.fAuth.authState.pipe(
+        first(),
+        map(user => !!user),
+        tap(authenticated => {
+          console.log("auth guard loggedin", authenticated);
+          authenticated || this._router.parseUrl('/auth/login')
+        })
+      )
    }
   
 }

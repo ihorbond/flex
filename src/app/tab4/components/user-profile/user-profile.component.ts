@@ -28,7 +28,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    const userId = this._authService.currentUser?.id || env.testUserId;
+    const userId = this._authService.loggedInUser?.uid || env.testUserId;
     this.subs.push(this.loadData(userId));
   }
 

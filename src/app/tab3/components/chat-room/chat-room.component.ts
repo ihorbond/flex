@@ -42,7 +42,7 @@ export class ChatRoomComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   async ngOnInit() {
-    this.currUserId = this._authService.currentUser?.id || env.testUserId;
+    this.currUserId = this._authService.loggedInUser?.uid || env.testUserId;
     this.room = await this.getRoom();
     console.log("room", this.room);
     this.otherUserId = Object.keys(this.room.users).find(key => key !== this.currUserId);

@@ -34,7 +34,7 @@ export class Tab5Page implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.userId = this._authService.currentUser?.id || env.testUserId;
+    this.userId = this._authService.loggedInUser?.uid || env.testUserId;
     this.subscribeToNotifications();
   }
 

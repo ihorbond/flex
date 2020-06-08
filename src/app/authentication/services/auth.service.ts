@@ -13,7 +13,7 @@ import { cfaSignInGoogle, cfaSignInFacebook } from 'capacitor-firebase-auth/alte
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
-  public currentUser: User = null;
+  public loggedInUser: firebase.User = null;
 
   private userSub: Subscription;
 
@@ -22,9 +22,12 @@ export class AuthService implements OnDestroy {
     private _fAuth: AngularFireAuth,
     private _router: Router
   ) {
-    this.userSub = _fAuth.authState.pipe(
-      switchMap(user => user ? this._dbService.doc$(`Users/${user.uid}`) : of(null))
-    ).subscribe(user => this.currentUser = user);
+    // _fAuth.onAuthStateChanged(user => {
+    //   console.log("on auth state changed", user);
+    //   this.currentUser = user;
+    // }, console.error)
+    
+    this.userSub = _fAuth.authState.subscribe(user => this.loggedInUser = user);
   }
 
   ngOnDestroy() {
@@ -36,11 +39,12 @@ export class AuthService implements OnDestroy {
     return this._fAuth;
   }
 
-  public get isLoggedIn(): boolean {
-    return !!this.currentUser;
-  }
-
   public async login(authInfo: UserAuthInfo): Promise<auth.UserCredential> {
+    if(authInfo.rememberMe) {
+       await this._fAuth.setPersistence(auth.Auth.Persistence.LOCAL)
+       console.log("local persistance", true);
+    }
+    
     const credential = await this._fAuth.signInWithEmailAndPassword(authInfo.username, authInfo.pass);
     console.log("login credential", credential);
     await this.updateUser(credential.user.uid);
